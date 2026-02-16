@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -31,7 +30,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HotelEntity {
+public class HotelEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,9 +50,6 @@ public class HotelEntity {
 
     @Column(nullable = false)
     private boolean active;
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
     @OneToMany(
         mappedBy = "hotel",
