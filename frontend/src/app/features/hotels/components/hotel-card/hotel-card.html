@@ -1,10 +1,24 @@
 <app-card>
-    @if (hotel().imageUrl) {
-    <img [ngSrc]="hotel().imageUrl" width="400" height="250" alt="Hotel image" />
-    }
+    <div class="image-wrapper">
+        <img [ngSrc]="hotel().imageUrl" width="400" height="260" alt="Hotel image" class="hotel-image" />
 
-    <h3>{{ hotel().name }}</h3>
-    <p>{{ hotel().city }}</p>
+        <span class="badge">Available</span>
+    </div>
 
-    <a [routerLink]="[hotel().id]">View Details</a>
+    <div class="card-content">
+        <div class="title-row">
+            <h3>{{ hotel().name }}</h3>
+            <span class="price">
+                From $120<span class="per-night">/night</span>
+            </span>
+        </div>
+
+        <p class="city">{{ hotel().city }}</p>
+
+        <div class="actions">
+            <a class="details-link" [routerLink]="[hotel().id]">
+                View Details →
+            </a>
+        </div>
+    </div>
 </app-card>
