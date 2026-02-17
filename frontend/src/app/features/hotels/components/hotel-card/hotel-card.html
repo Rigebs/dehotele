@@ -1,5 +1,7 @@
 <app-card>
+    @if (hotel().imageUrl) {
     <img [ngSrc]="hotel().imageUrl" width="400" height="250" alt="Hotel image" />
+    }
 
     <h3>{{ hotel().name }}</h3>
     <p>{{ hotel().city }}</p>

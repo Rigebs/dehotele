@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 
 import { LoginRequest, LoginResponse, RegisterRequest, UserResponse } from '../models/auth.models';
 import { ApiService } from './api-service';
@@ -18,6 +18,8 @@ export class AuthService {
 
   readonly isAuthenticated = computed(() => !!this.accessTokenSignal());
   readonly isAdmin = computed(() => this.currentUser()?.role === 'ADMIN');
+
+  private refreshInProgress = false;
 
   get accessToken(): string | null {
     return this.accessTokenSignal();
@@ -42,9 +44,18 @@ export class AuthService {
   }
 
   refreshToken() {
-    return this.api
-      .post<LoginResponse, unknown>('auth/refresh', {})
-      .pipe(tap((response) => this.setSession(response)));
+    if (this.refreshInProgress) {
+      return this.api.post<LoginResponse, unknown>('auth/refresh', {});
+    }
+
+    this.refreshInProgress = true;
+
+    return this.api.post<LoginResponse, unknown>('auth/refresh', {}).pipe(
+      tap((response) => this.setSession(response)),
+      finalize(() => {
+        this.refreshInProgress = false;
+      }),
+    );
   }
 
   private setSession(response: LoginResponse) {

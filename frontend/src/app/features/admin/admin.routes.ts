@@ -7,19 +7,23 @@ export const ADMIN_ROUTES: Routes = [
     path: '',
     canActivate: [authGuard, roleGuard],
     data: { role: 'ADMIN' },
-    loadComponent: () => import('./pages/admin-dashboard.page').then((m) => m.AdminDashboardPage),
+    loadComponent: () =>
+      import('./pages/admin-dashboard-page/admin-dashboard-page').then((m) => m.AdminDashboardPage),
   },
   {
     path: 'hotels',
     canActivate: [authGuard, roleGuard],
     data: { role: 'ADMIN' },
-    loadComponent: () => import('./pages/manage-hotels.page').then((m) => m.ManageHotelsPage),
+    loadComponent: () =>
+      import('./pages/manage-hotels-page/manage-hotels-page').then((m) => m.ManageHotelsPage),
   },
   {
     path: 'reservations',
     canActivate: [authGuard, roleGuard],
     data: { role: 'ADMIN' },
     loadComponent: () =>
-      import('./pages/manage-reservations.page').then((m) => m.ManageReservationsPage),
+      import('./pages/manage-reservations-page/manage-reservations-page').then(
+        (m) => m.ManageReservationsPage,
+      ),
   },
 ];
