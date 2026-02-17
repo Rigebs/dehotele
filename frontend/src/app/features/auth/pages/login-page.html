@@ -1,0 +1,13 @@
+<app-card>
+    <h2>Login</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <app-input label="Email" type="email" [control]="form.controls.email" />
+
+        <app-input label="Password" type="password" [control]="form.controls.password" />
+
+        <app-button type="submit" [disabled]="loading()">
+            Login
+        </app-button>
+    </form>
+</app-card>

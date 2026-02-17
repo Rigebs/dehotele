@@ -1,0 +1,20 @@
+<nav class="navbar">
+    <a routerLink="/">Hotels</a>
+
+    @if (isAuthenticated()) {
+    <a routerLink="/reservations">My Reservations</a>
+    }
+
+    @if (isAdmin()) {
+    <a routerLink="/admin">Admin</a>
+    }
+
+    @if (!isAuthenticated()) {
+    <a routerLink="/auth/login">Login</a>
+    <a routerLink="/auth/register">Register</a>
+    }
+
+    @if (isAuthenticated()) {
+    <button (click)="logout()">Logout</button>
+    }
+</nav>
