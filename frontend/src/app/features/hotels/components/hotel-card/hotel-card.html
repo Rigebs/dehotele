@@ -1,0 +1,8 @@
+<app-card>
+    <img [ngSrc]="hotel().imageUrl" width="400" height="250" alt="Hotel image" />
+
+    <h3>{{ hotel().name }}</h3>
+    <p>{{ hotel().city }}</p>
+
+    <a [routerLink]="[hotel().id]">View Details</a>
+</app-card>

@@ -1,0 +1,9 @@
+<h1>My Reservations</h1>
+
+@if (reservations().length === 0) {
+<p>No reservations found.</p>
+}
+
+@for (reservation of reservations(); track reservation.id) {
+<app-reservation-card [reservation]="reservation" (cancel)="cancel($event)" />
+}

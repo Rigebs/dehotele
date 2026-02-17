@@ -1,0 +1,15 @@
+<h1>Hotels</h1>
+
+<app-hotel-filter (filterChanged)="onFilter($event)" />
+
+<div class="grid">
+    @for (hotel of hotels(); track hotel.id) {
+    <app-hotel-card [hotel]="hotel" />
+    }
+</div>
+
+<div class="pagination">
+    <button (click)="prevPage()">Previous</button>
+    <span>Page {{ page() + 1 }} of {{ totalPages() }}</span>
+    <button (click)="nextPage()">Next</button>
+</div>

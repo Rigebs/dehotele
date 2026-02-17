@@ -1,0 +1,11 @@
+<app-button>
+    <h3>Reservation #{{ reservation().id }}</h3>
+
+    <p>Status: {{ reservation().status }}</p>
+    <p>Check-in: {{ reservation().checkIn }}</p>
+    <p>Check-out: {{ reservation().checkOut }}</p>
+
+    @if (reservation().status !== 'CANCELLED') {
+    <app-button (click)="onCancel()">Cancel</app-button>
+    }
+</app-button>
