@@ -3,10 +3,11 @@ import { HotelFilter } from '../../components/hotel-filter/hotel-filter';
 import { HotelService } from '../../services/hotel-service';
 import { HotelResponse } from '../../../../core/models/hotel.models';
 import { HotelCard } from '../../components/hotel-card/hotel-card';
+import { Hero } from '../../components/hero/hero';
 
 @Component({
   selector: 'app-hotels-page',
-  imports: [HotelCard, HotelFilter],
+  imports: [HotelCard, HotelFilter, Hero],
   templateUrl: './hotels-page.html',
   styleUrl: './hotels-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

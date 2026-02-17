@@ -1,6 +1,6 @@
-<h1>Hotels</h1>
+<app-hero (search)="onFilter($event)" />
 
-<app-hotel-filter (filterChanged)="onFilter($event)" />
+<h2 class="section-title">Available Hotels</h2>
 
 <div class="grid">
     @for (hotel of hotels(); track hotel.id) {
