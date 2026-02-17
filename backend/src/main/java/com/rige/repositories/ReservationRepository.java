@@ -14,20 +14,17 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     List<ReservationEntity> findByUserId(Long userId);
 
     @Query("""
-        SELECT r FROM ReservationEntity r
-        WHERE r.room.id = :roomId
-        AND r.status <> 'CANCELLED'
-        AND (
-            (:checkIn BETWEEN r.checkInDate AND r.checkOutDate)
-            OR
-            (:checkOut BETWEEN r.checkInDate AND r.checkOutDate)
-            OR
-            (r.checkInDate BETWEEN :checkIn AND :checkOut)
-        )
-    """)
+    SELECT r FROM ReservationEntity r
+    WHERE r.room.id = :roomId
+    AND r.status <> 'CANCELLED'
+    AND (
+        :checkIn < r.checkOutDate
+        AND :checkOut > r.checkInDate
+    )
+""")
     List<ReservationEntity> findConflictingReservations(
-        Long roomId,
-        LocalDate checkIn,
-        LocalDate checkOut
+            Long roomId,
+            LocalDate checkIn,
+            LocalDate checkOut
     );
 }

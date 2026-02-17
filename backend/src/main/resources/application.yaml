@@ -12,9 +12,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
 
 server:
   port: 8080
@@ -27,5 +24,10 @@ springdoc:
 
 logging:
   level:
-    org.hibernate.SQL: warn
-    org.hibernate.type.descriptor.sql.BasicBinder: warn
+    root: INFO
+    org.springframework: DEBUG
+    org.hibernate: DEBUG
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-expiration: 900000
