@@ -1,16 +1,31 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { NgOptimizedImage } from '@angular/common';
-import { HotelResponse } from '../../../../core/models/hotel.models';
-import { Card } from '../../../../shared/ui/card/card';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+export interface Hotel {
+  id: number;
+  name: string;
+  city: string;
+  address: string;
+  rating: number;
+  reviewsCount: number;
+  price: number;
+  imageUrl: string;
+}
 
 @Component({
   selector: 'app-hotel-card',
-  imports: [RouterLink, NgOptimizedImage, Card],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './hotel-card.html',
-  styleUrl: './hotel-card.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./hotel-card.css'],
 })
 export class HotelCard {
-  readonly hotel = input.required<HotelResponse>();
+  @Input({ required: true }) hotel!: Hotel;
+
+  constructor(private router: Router) {}
+
+  goToDetails() {
+    this.router.navigate(['/hotels', this.hotel.id]);
+  }
 }

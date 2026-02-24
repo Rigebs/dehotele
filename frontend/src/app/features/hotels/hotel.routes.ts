@@ -1,10 +1,15 @@
 import { Routes } from '@angular/router';
 
 export const HOTELS_ROUTES: Routes = [
+  // Lista de hoteles
   {
     path: '',
-    loadComponent: () => import('./pages/hotels-page/hotels-page').then((m) => m.HotelsPage),
+    loadComponent: () =>
+      import('./pages/hotel-list-page/hotel-list-page').then((m) => m.HotelListPage),
+    pathMatch: 'full', // aquí sí se usa full
   },
+
+  // Detalles de hotel (dinámica)
   {
     path: ':id',
     loadComponent: () =>

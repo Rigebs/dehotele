@@ -1,0 +1,78 @@
+:host {
+  --sidebar-width: 260px; /* Sincronizado con sidebar.css */
+}
+
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.topbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #f3f4f6;
+  padding: 1.5rem;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 900;
+}
+
+/* ===================== RESPONSIVE SYNC ===================== */
+
+/* Desktop Pequeño (Sidebar colapsado a iconos) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :host {
+    --sidebar-width: 80px;
+  }
+}
+
+/* Mobile (Sidebar fuera de pantalla) */
+@media (max-width: 768px) {
+  :host {
+    --sidebar-width: 0px;
+  }
+
+  .menu-btn {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 1rem;
+  }
+}

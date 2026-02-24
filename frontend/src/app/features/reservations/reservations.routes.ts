@@ -6,7 +6,7 @@ export const RESERVATIONS_ROUTES: Routes = [
     path: '',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./pages/reservations-page/reservations-page').then((m) => m.ReservationsPage),
+      import('./pages/my-reservations-page/my-reservations-page').then((m) => m.MyReservationsPage),
   },
   {
     path: 'create/:hotelId/:roomId',

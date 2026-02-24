@@ -1,0 +1,260 @@
+.hotels {
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ================= HEADER ================= */
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.section-header h2 {
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+
+/* ================= FILTERS ================= */
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filters input,
+.filters select {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  min-width: 180px;
+  transition: 0.3s;
+}
+
+.filters input:focus,
+.filters select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* ================= RESULT COUNT ================= */
+
+.results-count {
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  color: #666;
+}
+
+/* ================= GRID ================= */
+
+.hotel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+/* ================= CARD ================= */
+
+.hotel-card {
+  position: relative;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.hotel-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+}
+
+/* Fade in animation */
+.fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= IMAGE ================= */
+
+.image-wrapper {
+  overflow: hidden;
+}
+
+.hotel-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: 0.4s ease;
+}
+
+.hotel-card:hover img {
+  transform: scale(1.05);
+}
+
+/* ================= BADGE ================= */
+
+.top-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #ff9800;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ================= INFO ================= */
+
+.hotel-info {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.hotel-info h3 {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.location {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.rating {
+  font-weight: 500;
+}
+
+.rating span {
+  color: #777;
+  font-size: 0.8rem;
+}
+
+/* ================= AMENITIES ================= */
+
+.amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.badge {
+  background: var(--primary-color);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+}
+
+/* ================= FOOTER ================= */
+
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.price small {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.details-btn {
+  padding: 0.5rem 0.8rem;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: 0.3s ease;
+}
+
+.details-btn:hover {
+  background: var(--accent-color);
+}
+
+/* ================= PAGINATION ================= */
+
+.pagination {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.pagination button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: var(--primary-color);
+  color: #fff;
+  transition: 0.3s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--accent-color);
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ================= EMPTY STATE ================= */
+
+.empty-state {
+  text-align: center;
+  margin-top: 3rem;
+  color: #777;
+}
+
+/* ================= SKELETON ================= */
+
+.skeleton {
+  height: 320px;
+  background: linear-gradient(90deg, #eeeeee 25%, #dddddd 37%, #eeeeee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 14px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}

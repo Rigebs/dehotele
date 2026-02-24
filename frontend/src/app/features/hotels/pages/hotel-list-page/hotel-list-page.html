@@ -1,0 +1,80 @@
+<app-hero (search)="onSearch($event)"></app-hero>
+
+<section class="hotels">
+
+    <!-- 🔥 CONTENEDOR REQUERIDO PARA formControlName -->
+    <div [formGroup]="filtersForm">
+
+        <div class="section-header">
+            <h2>Available Hotels</h2>
+
+            <app-select formControlName="sort" [options]="[
+          { label: 'Price (Low to High)', value: 'price-low' },
+          { label: 'Price (High to Low)', value: 'price-high' },
+          { label: 'Best Rated', value: 'rating' }
+        ]" placeholder="Sort by">
+            </app-select>
+        </div>
+
+        <div class="filters">
+
+            <app-select formControlName="rating" [options]="[
+          { label: 'All ratings', value: null },
+          { label: '4+ stars', value: 4 },
+          { label: '3+ stars', value: 3 }
+        ]" placeholder="Rating">
+            </app-select>
+
+            <app-select formControlName="guests" [options]="[
+          { label: 'Guests', value: null },
+          { label: '1 Guest', value: 1 },
+          { label: '2 Guests', value: 2 },
+          { label: '3+ Guests', value: 3 }
+        ]" placeholder="Guests">
+            </app-select>
+
+        </div>
+
+    </div>
+    <!-- 🔥 FIN formGroup -->
+
+    <p class="results-count">
+        {{ sortedHotels().length }} hotels found
+    </p>
+
+    @if (sortedHotels().length === 0) {
+    <div class="empty-state">
+        <h3>No hotels found 😢</h3>
+        <p>Try adjusting your filters.</p>
+    </div>
+    }
+
+    @if (sortedHotels().length > 0) {
+
+    <div class="hotel-grid">
+
+        @for (hotel of paginatedHotels(); track hotel.id) {
+        <app-hotel-card [hotel]="hotel"></app-hotel-card>
+        }
+
+    </div>
+
+    <div class="pagination">
+
+        <button (click)="previousPage()" [disabled]="isFirstPage()">
+            Previous
+        </button>
+
+        <span>
+            Page {{ page() + 1 }} / {{ totalPages() }}
+        </span>
+
+        <button (click)="nextPage()" [disabled]="isLastPage()">
+            Next
+        </button>
+
+    </div>
+
+    }
+
+</section>

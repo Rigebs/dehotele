@@ -1,0 +1,29 @@
+<section class="auth-container">
+    <div class="auth-card">
+        <h2>Register</h2>
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+
+            <app-input [label]="'Name'" [type]="'text'" formControlName="name"
+                [error]="form.get('name')?.touched && form.get('name')?.invalid ? 'Name is required' : null">
+            </app-input>
+
+            <app-input [label]="'Email'" [type]="'email'" formControlName="email"
+                [error]="form.get('email')?.touched && form.get('email')?.invalid ? 'Enter a valid email' : null">
+            </app-input>
+
+            <app-input [label]="'Password'" [type]="'password'" formControlName="password"
+                [error]="form.get('password')?.touched && form.get('password')?.invalid ? 'Password must be at least 6 characters' : null">
+            </app-input>
+
+            <app-button type="submit" [loading]="isLoading()">
+                @if(isLoading()) { Registering... } @else { Register }
+            </app-button>
+
+            @if(errorMessage()) {
+            <p class="error">{{ errorMessage() }}</p>
+            }
+
+        </form>
+    </div>
+</section>

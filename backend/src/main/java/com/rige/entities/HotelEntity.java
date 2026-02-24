@@ -1,13 +1,16 @@
 package com.rige.entities;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,10 +23,11 @@ import java.util.List;
 
 @Entity
 @Table(
-    name = "hotels",
-    indexes = {
-        @Index(name = "idx_hotel_city", columnList = "city")
-    }
+        name = "hotels",
+        indexes = {
+                @Index(name = "idx_hotel_city", columnList = "city"),
+                @Index(name = "idx_hotel_active", columnList = "active")
+        }
 )
 @Getter
 @Setter
@@ -51,11 +55,28 @@ public class HotelEntity extends BaseEntity {
     @Column(nullable = false)
     private boolean active;
 
+    @Column(length = 500)
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private Double rating;
+
+    @Column(nullable = false)
+    private Integer reviewsCount;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "hotel_amenities",
+            joinColumns = @JoinColumn(name = "hotel_id")
+    )
+    @Column(name = "amenity")
+    private List<String> amenities;
+
     @OneToMany(
-        mappedBy = "hotel",
-        fetch = FetchType.LAZY,
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
+            mappedBy = "hotel",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<RoomEntity> rooms;
 }

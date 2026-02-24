@@ -1,0 +1,32 @@
+<div class="card hotel-card">
+    <div class="hotel-image" *ngIf="hotel.imageUrl">
+        <img [src]="hotel.imageUrl" [alt]="hotel.name" />
+    </div>
+
+    <div class="hotel-body">
+        <div class="hotel-header">
+            <h3 class="mb-1">{{ hotel.name }}</h3>
+            <span class="rating">
+                ★ {{ hotel.rating }} ({{ hotel.reviewsCount }})
+            </span>
+        </div>
+
+        <p class="mb-1 city">{{ hotel.city }}</p>
+        <p class="mb-2 address">{{ hotel.address }}</p>
+
+        <p class="description mb-3">
+            {{ hotel.description }}
+        </p>
+
+        <div class="amenities mb-3" *ngIf="hotel.amenities.length">
+            <span class="amenity" *ngFor="let amenity of hotel.amenities">
+                {{ amenity }}
+            </span>
+        </div>
+
+        <div class="actions">
+            <button class="accent" (click)="onEdit()">Editar</button>
+            <button class="danger" (click)="onDelete()">Eliminar</button>
+        </div>
+    </div>
+</div>

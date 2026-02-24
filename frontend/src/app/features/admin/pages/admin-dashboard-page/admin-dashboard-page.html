@@ -1,6 +1,160 @@
-<h1>Admin Dashboard</h1>
+<div class="dashboard-wrapper">
+    <header class="dashboard-header card">
+        <div class="brand">
+            <h2>Hotel<span class="accent-text">Admin</span></h2>
+        </div>
+        <div class="header-actions">
+            <div class="user-profile">
+                <div class="user-info">
+                    <p class="user-name">Admin User</p>
+                    <small class="text-light">Panel de Control</small>
+                </div>
+                <div class="avatar">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<div class="admin-links">
-    <a routerLink="/admin/hotels">Manage Hotels</a>
-    <a routerLink="/admin/reservations">Manage Reservations</a>
+    <section class="stats-grid">
+        @for (stat of stats; track stat.label) {
+        <div class="card stat-card">
+            <div class="icon-container" [style.background-color]="stat.color + '15'">
+                <span class="stat-icon" [style.color]="stat.color">
+                    @switch (stat.icon) {
+                    @case ('calendar') {
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path
+                            d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z" />
+                    </svg>
+                    }
+                    @case ('money') {
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path
+                            d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
+                    </svg>
+                    }
+                    @case ('bed') {
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path
+                            d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z" />
+                    </svg>
+                    }
+                    @case ('key') {
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path
+                            d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+                    </svg>
+                    }
+                    }
+                </span>
+            </div>
+            <div class="stat-details">
+                <p class="text-light">{{ stat.label }}</p>
+                <h3 class="stat-value">{{ stat.value }}</h3>
+            </div>
+        </div>
+        }
+    </section>
+
+    <div class="dashboard-content">
+        <div class="card table-card">
+            <div class="card-header">
+                <h3>Reservas Recientes</h3>
+                <button class="btn-primary flex-btn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path
+                            d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z" />
+                    </svg>
+                    Exportar Excel
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Huésped</th>
+                            <th>Habitación</th>
+                            <th>Check-in</th>
+                            <th>Estado</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (res of recentReservations; track res.id) {
+                        <tr class="clickable-row">
+                            <td data-label="ID"><span class="res-id">#{{ res.id }}</span></td>
+                            <td data-label="Huésped">
+                                <div class="guest-info">
+                                    <span class="guest-name">{{ res.guest }}</span>
+                                </div>
+                            </td>
+                            <td data-label="Habitación">{{ res.room }}</td>
+                            <td data-label="Check-in">{{ res.checkIn }}</td>
+                            <td data-label="Estado">
+                                <span class="status-badge" [ngClass]="getStatusClass(res.status)">
+                                    {{ res.status }}
+                                </span>
+                            </td>
+                            <td data-label="Total"><span class="amount-text">${{ res.amount }}</span></td>
+                            <td data-label="Acciones" class="text-center">
+                                <button class="btn-icon view-btn" (click)="goToDetail(res.id)" title="Ver detalle">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                        } @empty {
+                        <tr>
+                            <td colspan="7" class="no-results">No hay reservas disponibles.</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card summary-card">
+            <h3 class="card-title">Estado de Ocupación</h3>
+            <div class="status-list">
+                <div class="status-item">
+                    <div class="status-label">
+                        <span>Disponibles</span>
+                        <small>45/60</small>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress bg-green" style="width: 75%"></div>
+                    </div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-label">
+                        <span>Limpieza</span>
+                        <small>5 hab.</small>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress bg-orange" style="width: 15%"></div>
+                    </div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-label">
+                        <span>Mantenimiento</span>
+                        <small>2 hab.</small>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress bg-red" style="width: 10%"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-accent w-100">Ver mapa de habitaciones</button>
+        </div>
+    </div>
 </div>

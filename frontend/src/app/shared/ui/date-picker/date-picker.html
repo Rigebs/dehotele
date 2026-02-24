@@ -1,0 +1,59 @@
+<div class="date-picker">
+
+    <label *ngIf="label">{{ label }}</label>
+
+    <div class="input" (click)="toggle()">
+        <span>
+            {{ selectedDate() ? (selectedDate() | date:'mediumDate') : placeholder }}
+        </span>
+
+        <svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-width="1.5"
+                d="M8 7V3m8 4V3m-9 8h10m-13 8h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+    </div>
+
+
+    <div class="calendar" *ngIf="isOpen()">
+
+        <div class="calendar-header">
+            <button type="button" (click)="previousMonth()">‹</button>
+
+            <select [ngModel]="currentMonth().getMonth()" (ngModelChange)="updateMonth($event)">
+                <option *ngFor="let month of months; let i = index" [ngValue]="i">
+                    {{ month }}
+                </option>
+            </select>
+
+            <select [ngModel]="currentMonth().getFullYear()" (ngModelChange)="updateYear($event)">
+                <option *ngFor="let year of years()" [ngValue]="year">
+                    {{ year }}
+                </option>
+            </select>
+
+            <button type="button" (click)="nextMonth()">›</button>
+        </div>
+
+        <!-- Week Days -->
+        <div class="week-days">
+            <div *ngFor="let d of weekDays">{{ d }}</div>
+        </div>
+
+        <!-- Animated Month -->
+        <div class="calendar-grid month-transition" [class.left]="monthDirection() === 'left'"
+            [class.right]="monthDirection() === 'right'">
+            <ng-container *ngFor="let day of getCalendarDays()">
+                <div class="day" *ngIf="day" [class.selected]="isSelected(day)"
+                    [class.disabled]="isDisabled(getDateForDay(day))" (click)="selectDate(day)">
+                    {{ day }}
+                </div>
+
+                <div *ngIf="!day"></div>
+            </ng-container>
+        </div>
+
+    </div>
+
+
+</div>

@@ -5,7 +5,7 @@ import { Input } from '../../../../shared/ui/input/input';
 
 @Component({
   selector: 'app-hotel-filter',
-  imports: [ReactiveFormsModule, Button, Input],
+  imports: [ReactiveFormsModule],
   templateUrl: './hotel-filter.html',
   styleUrl: './hotel-filter.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

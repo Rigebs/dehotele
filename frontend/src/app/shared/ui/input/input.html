@@ -1,4 +1,11 @@
-<div class="input-group">
+<div class="input-wrapper">
+    @if(label()) {
     <label>{{ label() }}</label>
-    <input [type]="type()" [formControl]="control()" class="input" />
+    }
+
+    <input [type]="type()" [value]="value" (input)="onInput($event)" (blur)="onBlur()" [class.invalid]="error()" />
+
+    @if(error()) {
+    <p class="input-error">{{ error() }}</p>
+    }
 </div>

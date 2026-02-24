@@ -1,0 +1,152 @@
+/* ================= NAVBAR BASE ================= */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1rem 2rem;
+
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.85);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ================= LOGO ================= */
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--primary-color);
+  letter-spacing: 0.5px;
+  transition: 0.3s ease;
+}
+
+.logo:hover {
+  opacity: 0.8;
+}
+
+/* ================= LINKS ================= */
+
+.links {
+  display: flex;
+  gap: 2rem;
+}
+
+.links a {
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+  position: relative;
+  transition: 0.3s ease;
+}
+
+/* Underline animation */
+.links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: var(--primary-color);
+  transition: 0.3s ease;
+}
+
+.links a:hover::after {
+  width: 100%;
+}
+
+.links a.active {
+  color: var(--primary-color);
+}
+
+.links a.active::after {
+  width: 100%;
+}
+
+/* ================= AUTH AREA ================= */
+
+.auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Login simple */
+.login-link {
+  text-decoration: none;
+  font-weight: 500;
+  color: #444;
+  transition: 0.3s ease;
+}
+
+.login-link:hover {
+  color: var(--primary-color);
+}
+
+/* Register button (Primary CTA) */
+.register-btn {
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.register-btn:hover {
+  background: var(--accent-color);
+}
+
+/* User badge */
+.user-badge {
+  padding: 0.4rem 0.8rem;
+  background: #f2f2f2;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+/* Logout button */
+.logout-btn {
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  background: #e53935;
+  color: white;
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #c62828;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .links {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .auth-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

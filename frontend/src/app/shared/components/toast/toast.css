@@ -1,0 +1,29 @@
+/* toast.css */
+.toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 1rem 1.5rem;
+  background-color: #10b981; /* verde por defecto */
+  color: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  z-index: 2000;
+  font-weight: 500;
+  animation: slide-in 0.5s ease-out;
+}
+
+.toast.error {
+  background-color: #ef4444;
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

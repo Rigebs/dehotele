@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Button } from '../../../../shared/ui/button/button';
-import { Card } from '../../../../shared/ui/card/card';
-import { Input } from '../../../../shared/ui/input/input';
 import { ReservationService } from '../../services/reservation-service';
 import { ToastService } from '../../../../core/services/toast-service';
 
 @Component({
   selector: 'app-create-reservation-page',
-  imports: [ReactiveFormsModule, Button, Input, Card],
+  imports: [ReactiveFormsModule],
   templateUrl: './create-reservation-page.html',
   styleUrl: './create-reservation-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,14 +44,26 @@ export class CreateReservationPage {
     this.loading.set(true);
 
     this.reservationService
-      .createReservation(this.hotelId, this.roomId, checkIn, checkOut)
-      .subscribe(() => {
-        this.toast.show({
-          type: 'success',
-          message: 'Reservation created successfully',
-        });
+      .createReservation({
+        roomId: this.roomId,
+        checkInDate: checkIn,
+        checkOutDate: checkOut,
+      })
+      .subscribe({
+        next: () => {
+          this.toast.show({
+            type: 'success',
+            message: 'Reservation created successfully',
+          });
 
-        this.router.navigate(['/reservations']);
+          this.router.navigate(['/reservations']);
+        },
+        error: () => {
+          this.loading.set(false);
+        },
+        complete: () => {
+          this.loading.set(false);
+        },
       });
   }
 }

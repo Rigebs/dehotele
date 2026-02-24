@@ -1,0 +1,342 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ================= HERO ================= */
+
+.hero-detail {
+  position: relative;
+  height: 500px;
+  background: #000;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+.hero-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 80px 0 40px 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.4) 60%,
+    transparent 100%
+  );
+  color: white;
+}
+
+.badge-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-color);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+}
+
+.badge-location svg {
+  stroke: white;
+}
+
+.hero-overlay h1 {
+  font-size: 3.5rem;
+  margin: 10px 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 3rem;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 2px;
+  color: #ffb400;
+}
+
+.rating-score {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.reviews-count {
+  opacity: 0.85;
+  font-size: 0.9rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  padding-left: 12px;
+}
+
+/* ================= LAYOUT ================= */
+
+.hotel-content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 50px;
+  margin-top: -40px;
+  position: relative;
+  z-index: 10;
+}
+
+.hotel-main {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= DESCRIPTION ================= */
+
+.description-section {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 30px;
+}
+
+.section-title-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.title-divider {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, #eee, transparent);
+}
+
+.description-text {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #4b5563;
+  margin-bottom: 25px;
+}
+
+.address-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #f0f7ff;
+  border-radius: 10px;
+  color: var(--primary-color);
+  font-size: 0.95rem;
+  margin-bottom: 40px;
+}
+
+.icon-pin {
+  color: var(--primary-color);
+}
+
+/* ================= AMENITIES ================= */
+
+.amenities-container h3 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.amenity-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.amenity-card:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.amenity-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff9f0;
+  border-radius: 12px;
+  color: var(--accent-color);
+  margin-bottom: 10px;
+}
+
+.amenity-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* ================= BOOKING ================= */
+
+.date-picker-bar {
+  display: flex;
+  background: #f3f4f6;
+  padding: 15px 25px;
+  border-radius: 15px;
+  margin: 20px 0 40px;
+  align-items: center;
+}
+
+.date-picker-bar .input-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.date-picker-bar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.date-picker-bar input {
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  padding: 5px 0;
+}
+
+.date-picker-bar .divider {
+  width: 1px;
+  height: 40px;
+  background: #d1d5db;
+  margin: 0 20px;
+}
+
+/* ================= ROOMS ================= */
+
+.room-card-horizontal {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px;
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  transition: 0.3s ease;
+}
+
+.room-card-horizontal:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.room-details h4 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.room-features {
+  list-style: none;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #059669;
+  padding: 0;
+}
+
+.room-actions {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+}
+
+.price-tag .amount {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary-color);
+}
+
+.btn-reserve {
+  background: var(--primary-color);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-reserve:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sticky-card {
+  position: sticky;
+  top: 100px;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f3f4f6;
+}
+
+.big-price {
+  font-size: 2.2rem;
+  font-weight: 800;
+  display: block;
+  color: var(--text-color);
+}
+
+.btn-outline-full {
+  width: 100%;
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 12px;
+  margin-top: 20px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+  .hotel-content {
+    grid-template-columns: 1fr;
+  }
+
+  .hotel-sidebar {
+    order: -1;
+  }
+
+  .hero-overlay h1 {
+    font-size: 2.2rem;
+  }
+}

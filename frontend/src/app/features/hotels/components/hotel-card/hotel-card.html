@@ -1,24 +1,30 @@
-<app-card>
-    <div class="image-wrapper">
-        <img [ngSrc]="hotel().imageUrl" width="400" height="260" alt="Hotel image" class="hotel-image" />
+<div class="hotel-card">
 
-        <span class="badge">Available</span>
-    </div>
+    @if (hotel.rating >= 4.5) {
+    <span class="top-badge">Top Rated</span>
+    }
 
-    <div class="card-content">
-        <div class="title-row">
-            <h3>{{ hotel().name }}</h3>
-            <span class="price">
-                From $120<span class="per-night">/night</span>
-            </span>
+    <img [src]="hotel.imageUrl" [alt]="hotel.name" />
+
+    <div class="hotel-info">
+        <h3>{{ hotel.name }}</h3>
+
+        <p>
+            📍 {{ hotel.city }} - {{ hotel.address }}
+        </p>
+
+        <div>
+            ⭐ {{ hotel.rating }}
+            ({{ hotel.reviewsCount }} reviews)
         </div>
 
-        <p class="city">{{ hotel().city }}</p>
-
-        <div class="actions">
-            <a class="details-link" [routerLink]="[hotel().id]">
-                View Details →
-            </a>
+        <div class="price">
+            $ {{ hotel.price }} / night
         </div>
+
+        <button (click)="goToDetails()">
+            View Details
+        </button>
     </div>
-</app-card>
+
+</div>

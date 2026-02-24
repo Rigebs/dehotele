@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { Card } from '../../../../shared/ui/card/card';
 import { Button } from '../../../../shared/ui/button/button';
-import { ReservationResponse } from '../../../../core/models/reservation.models';
+import { ReservationResponse } from '../../../../core/models/reservation.model';
 
 @Component({
   selector: 'app-reservation-card',
-  imports: [Card, Button],
+  imports: [Button],
   templateUrl: './reservation-card.html',
   styleUrl: './reservation-card.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

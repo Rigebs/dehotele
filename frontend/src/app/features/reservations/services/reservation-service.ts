@@ -1,34 +1,26 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-
-import { ReservationResponse } from '../../../core/models/reservation.models';
-import { ApiService } from '../../../core/services/api-service';
+import { ReservationRequest, ReservationResponse } from '../../../core/models/reservation.model';
+import { environment } from '../../../../environments/environment.development';
+import { HttpClient } from '@angular/common/http';
+import { PageResponse } from '../../../core/models/hotel.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReservationService {
-  private readonly api = inject(ApiService);
+  private readonly http = inject(HttpClient);
 
-  getMyReservations(): Observable<readonly ReservationResponse[]> {
-    return this.api.get<readonly ReservationResponse[]>('reservations/me');
+  createReservation(request: ReservationRequest) {
+    return this.http.post<ReservationResponse>(`${environment.apiUrl}/reservations`, request);
   }
 
-  createReservation(
-    hotelId: number,
-    roomId: number,
-    checkIn: string,
-    checkOut: string,
-  ): Observable<ReservationResponse> {
-    return this.api.post<ReservationResponse, unknown>('reservations', {
-      hotelId,
-      roomId,
-      checkIn,
-      checkOut,
+  getMyReservations(page = 0, size = 10) {
+    return this.http.get<PageResponse<ReservationResponse>>(`${environment.apiUrl}/reservations`, {
+      params: { page, size },
     });
   }
 
   cancelReservation(id: number) {
-    return this.api.put<void, unknown>(`reservations/${id}/cancel`, {});
+    return this.http.patch<void>(`${environment.apiUrl}/reservations/${id}/cancel`, {});
   }
 }

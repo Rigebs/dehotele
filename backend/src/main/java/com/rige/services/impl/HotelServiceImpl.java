@@ -4,12 +4,15 @@ import com.rige.dto.request.HotelRequest;
 import com.rige.dto.response.HotelResponse;
 import com.rige.entities.HotelEntity;
 import com.rige.exceptions.ResourceNotFoundException;
+import com.rige.filters.HotelFilter;
 import com.rige.mappers.HotelMapper;
 import com.rige.repositories.HotelRepository;
 import com.rige.services.HotelService;
+import com.rige.specifications.HotelSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +26,10 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<HotelResponse> findAll(Pageable pageable) {
-        return hotelRepository.findAll(pageable)
+    public Page<HotelResponse> findAll(HotelFilter filter, Pageable pageable) {
+        Specification<HotelEntity> spec = HotelSpecifications.build(filter);
+
+        return hotelRepository.findAll(spec, pageable)
                 .map(hotelMapper::toResponseDTO);
     }
 

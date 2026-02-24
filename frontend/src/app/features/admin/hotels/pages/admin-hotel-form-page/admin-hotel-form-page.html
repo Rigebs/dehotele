@@ -1,0 +1,120 @@
+<div class="hotel-page">
+    <div class="hotel-wrapper">
+        <header class="hotel-header">
+            <h1>
+                {{ isEdit ? 'Editar Hotel' : 'Crear Hotel' }}
+            </h1>
+            <p class="hotel-subtitle">
+                Administra la información principal del hotel.
+            </p>
+        </header>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="hotel-form">
+
+            <section class="form-section">
+                <div class="section-header">
+                    <h2>Información básica</h2>
+                </div>
+
+                <div class="form-grid two-columns">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input id="name" type="text" formControlName="name" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">Ciudad</label>
+                        <input id="city" type="text" formControlName="city" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Dirección</label>
+                    <input id="address" type="text" formControlName="address" />
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" rows="4" formControlName="description"></textarea>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <div class="section-header">
+                    <h2>Detalles</h2>
+                </div>
+
+                <div class="form-group">
+                    <label>Imagen del Hotel</label>
+
+                    <div class="image-upload">
+                        <div *ngIf="form.value.imageUrl && !imagePreview" class="image-card">
+                            <img [src]="form.value.imageUrl" alt="Hotel image" />
+
+                            <div class="image-overlay">
+                                <label class="change-image-btn">
+                                    Cambiar imagen
+                                    <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div *ngIf="imagePreview" class="image-card preview">
+                            <img [src]="imagePreview" alt="Preview" />
+
+                            <div class="image-overlay actions">
+                                <button type="button" class="icon-btn success" (click)="confirmUpload()"
+                                    [disabled]="isUploading">
+                                    <svg *ngIf="!isUploading" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M9 16.2l-3.5-3.5L4 14.2l5 5 12-12-1.5-1.5z" />
+                                    </svg>
+                                    <span *ngIf="isUploading" class="mini-spinner"></span>
+                                </button>
+
+                                <button type="button" class="icon-btn danger" (click)="cancelUpload()"
+                                    [disabled]="isUploading">
+                                    <svg viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M6 6l12 12M18 6L6 18" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <label *ngIf="!form.value.imageUrl && !imagePreview" class="upload-placeholder">
+                            <div class="upload-content">
+                                <svg viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7 7-7z" />
+                                </svg>
+                                <span>Seleccionar imagen</span>
+                                <small>PNG, JPG o WEBP</small>
+                            </div>
+                            <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+                        </label>
+                    </div>
+
+                    <input type="hidden" formControlName="imageUrl" />
+                </div>
+
+                <div class="form-group">
+                    <label for="amenitiesInput">
+                        Amenities (separados por coma)
+                    </label>
+                    <input id="amenitiesInput" type="text" formControlName="amenitiesInput"
+                        placeholder="Wifi, Piscina, Spa..." />
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" (click)="goBack()" [disabled]="isSaving">
+                    Cancelar
+                </button>
+
+                <button type="submit" class="primary" [disabled]="isSaving || form.invalid">
+                    <span *ngIf="!isSaving">{{ isEdit ? 'Actualizar' : 'Crear' }}</span>
+                    <span *ngIf="isSaving">Procesando...</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+<div class="admin-container">
+    <header class="header">
+        <div class="header-content">
+            <h1>Administrar Hoteles</h1>
+
+            @if (loading) {
+            <p class="subtitle">{{ totalElements }} hoteles registrados</p>
+            }
+
+        </div>
+        <button class="btn-primary" (click)="onCreate()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Nuevo Hotel</span>
+        </button>
+    </header>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <input type="text" placeholder="Buscar por nombre..." (input)="onSearch($event)" class="search-input">
+        </div>
+
+        <div class="sort-box">
+            <app-select [options]="sortOptions" [(ngModel)]="selectedSort" (ngModelChange)="onSortChange($event)"
+                placeholder="Ordenar por...">
+            </app-select>
+        </div>
+    </div>
+
+    @if (errorMessage) {
+    <div class="alert error-alert">
+        <span>{{ errorMessage }}</span>
+        <button (click)="loadHotels(currentPage)">Reintentar</button>
+    </div>
+    }
+
+    @if (loading) {
+    <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando catálogo de hoteles...</p>
+    </div>
+    } @else {
+    <div class="grid">
+        @for (hotel of hotels; track hotel.id) {
+        <app-admin-hotel-card [hotel]="hotel" (edit)="onEdit($event)" (delete)="onDelete($event)">
+        </app-admin-hotel-card>
+        } @empty {
+        <div class="empty-state">
+            <p>No se encontraron hoteles. Comienza creando uno nuevo.</p>
+        </div>
+        }
+    </div>
+
+    @if (totalPages > 1) {
+    <nav class="pagination">
+        <button class="btn-outline" [disabled]="currentPage === 0" (click)="loadHotels(currentPage - 1)">
+            Anterior
+        </button>
+
+        <span class="page-info">Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+
+        <button class="btn-outline" [disabled]="currentPage === totalPages - 1" (click)="loadHotels(currentPage + 1)">
+            Siguiente
+        </button>
+    </nav>
+    }
+    }
+</div>

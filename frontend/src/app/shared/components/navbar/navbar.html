@@ -1,24 +1,54 @@
 <nav class="navbar">
-    <div class="left">
-        <a routerLink="/">Booking System</a>
-    </div>
 
-    <div class="right">
+    <!-- LOGO -->
+    <a routerLink="/" class="logo">
+        BookingApp
+    </a>
+
+    <!-- CENTER LINKS -->
+    <div class="links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            Hotels
+        </a>
+
         @if (isAuthenticated()) {
-        <a routerLink="/reservations">My Reservations</a>
+        <a routerLink="/reservations" routerLinkActive="active">
+            My Reservations
+        </a>
         }
 
         @if (isAdmin()) {
-        <a routerLink="/admin">Admin</a>
-        }
-
-        @if (!isAuthenticated()) {
-        <a routerLink="/auth/login">Login</a>
-        <a routerLink="/auth/register">Register</a>
-        }
-
-        @if (isAuthenticated()) {
-        <button (click)="logout()">Logout</button>
+        <a routerLink="/admin" routerLinkActive="active">
+            Admin
+        </a>
         }
     </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="auth-actions">
+
+        @if (!isAuthenticated()) {
+
+        <a routerLink="/auth/login" class="login-link">
+            Login
+        </a>
+
+        <a routerLink="/auth/register" class="register-btn">
+            Register
+        </a>
+
+        } @else {
+
+        <div class="user-badge">
+            👤 My Account
+        </div>
+
+        <button (click)="logout()" class="logout-btn">
+            Logout
+        </button>
+
+        }
+
+    </div>
+
 </nav>

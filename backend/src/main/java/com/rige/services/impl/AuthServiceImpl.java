@@ -31,7 +31,6 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public AuthResponse register(RegisterRequest request) {
-
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Email already in use");
         }
@@ -46,8 +45,8 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        String token = jwtService.generateToken(user);
-
+        // CAMBIO: Ahora usa generateAccessToken (10 segundos)
+        String token = jwtService.generateAccessToken(user);
         RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(user);
 
         return AuthResponse.builder()
@@ -57,7 +56,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -68,8 +66,8 @@ public class AuthServiceImpl implements AuthService {
         UserEntity user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
 
-        String token = jwtService.generateToken(user);
-
+        // CAMBIO: Ahora usa generateAccessToken (10 segundos)
+        String token = jwtService.generateAccessToken(user);
         RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(user);
 
         return AuthResponse.builder()
@@ -80,13 +78,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse refreshToken(RefreshRequest request) {
-
         RefreshTokenEntity refreshToken = refreshTokenRepository
                 .findByToken(request.getRefreshToken())
                 .orElseThrow(() -> new BadRequestException("Invalid refresh token"));
 
         refreshTokenService.verifyExpiration(refreshToken);
-
         UserEntity user = refreshToken.getUser();
 
         return AuthResponse.builder()

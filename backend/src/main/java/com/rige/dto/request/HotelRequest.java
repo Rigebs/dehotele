@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class HotelRequest {
@@ -22,4 +24,8 @@ public class HotelRequest {
     private String address;
 
     private String description;
+
+    private String imageUrl;
+
+    private List<String> amenities;
 }

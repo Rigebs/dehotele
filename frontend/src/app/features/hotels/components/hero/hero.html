@@ -1,18 +1,32 @@
 <section class="hero">
-    <div class="overlay"></div>
+    <div class="hero-overlay"></div>
 
-    <div class="content">
+    <div class="hero-content">
         <h1>Find Your Perfect Stay</h1>
-        <p>Discover premium hotels at the best prices.</p>
+        <p>Discover premium hotels at the best prices around the world.</p>
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="search-box">
-            <app-input label="Check-in" type="date" [control]="form.controls.checkIn" />
 
-            <app-input label="Check-out" type="date" [control]="form.controls.checkOut" />
+            <!-- City -->
+            <input type="text" formControlName="city" placeholder="City" class="input" />
 
-            <app-button type="submit">
+            <!-- Guests usando tu componente -->
+            <app-select formControlName="guests" [options]="guestOptions" placeholder="Guests">
+            </app-select>
+
+            <!-- Check In -->
+            <app-date-picker formControlName="checkIn" label="Check In" [minDate]="today">
+            </app-date-picker>
+
+            <!-- Check Out -->
+            <app-date-picker formControlName="checkOut" label="Check Out" [minDate]="checkOutMinDate">
+            </app-date-picker>
+
+            <!-- Submit -->
+            <app-button type="submit" [disabled]="form.invalid">
                 Search
             </app-button>
+
         </form>
     </div>
 </section>

@@ -1,0 +1,204 @@
+/* ===================== DATE PICKER ===================== */
+
+.date-picker {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  font-size: 0.95rem;
+}
+
+/* ===================== LABEL ===================== */
+
+.date-picker label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+/* ===================== INPUT DISPLAY ===================== */
+
+.date-picker .input {
+  background-color: var(--bg-color);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 2px 6px var(--shadow-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.date-picker .input:hover {
+  border-color: var(--primary-color);
+}
+
+.date-picker .input:active {
+  transform: scale(0.98);
+}
+
+/* ===================== CALENDAR CONTAINER ===================== */
+
+.date-picker .calendar {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  background: var(--bg-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  z-index: 10;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* ===================== HEADER ===================== */
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.calendar-header button {
+  background: transparent;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--primary-color);
+}
+
+.calendar-header button:hover {
+  background-color: rgba(30, 58, 138, 0.08);
+}
+
+.calendar-header select {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  cursor: pointer;
+}
+
+.calendar-header select:focus {
+  border-color: var(--primary-color);
+}
+
+/* ===================== GRID ===================== */
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+}
+
+/* ===================== DAY CELL ===================== */
+
+.day {
+  text-align: center;
+  padding: 0.5rem 0;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+
+.day:hover:not(.disabled):not(.selected) {
+  background-color: rgba(30, 58, 138, 0.08);
+}
+
+.day.selected {
+  background-color: var(--primary-color);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(30, 58, 138, 0.25);
+}
+
+.day.disabled {
+  color: #9b9c9d;
+  cursor: not-allowed;
+}
+
+/* ===================== ANIMATION ===================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===================== WEEK DAYS ===================== */
+
+.week-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-light);
+}
+
+/* ===================== ANIMACIÓN MES ===================== */
+
+.month-transition {
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.month-transition.left {
+  animation: slideLeft 0.25s ease;
+}
+
+.month-transition.right {
+  animation: slideRight 0.25s ease;
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===================== HOVER INTELIGENTE ===================== */
+
+.day:hover:not(.disabled):not(.selected) {
+  background-color: rgba(30, 58, 138, 0.12);
+  transform: scale(1.08);
+}
+
+/* ===================== ICON ===================== */
+
+.calendar-icon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.6;
+}

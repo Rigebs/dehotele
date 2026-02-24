@@ -1,0 +1,256 @@
+.hotel-page {
+  padding: 2.5rem 1.5rem 3rem;
+}
+
+.hotel-wrapper {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* Header */
+.hotel-header {
+  margin-bottom: 2rem;
+}
+
+.hotel-header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.hotel-subtitle {
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+/* Formulario */
+.hotel-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* Secciones */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.section-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+/* Grid */
+.form-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.two-columns {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Grupo de campos */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+/* Inputs más limpios */
+input,
+textarea {
+  background-color: #fff;
+}
+
+/* Textarea */
+textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+/* Acciones */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+/* Botón secundario */
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid #d1d5db;
+  color: var(--text-color);
+}
+
+.btn-secondary:hover {
+  background-color: #f3f4f6;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .hotel-page {
+    padding: 2rem 1rem 2.5rem;
+  }
+}
+
+/* === Image Upload === */
+
+.image-upload {
+  margin-top: 0.5rem;
+}
+
+.image-card {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+.image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay profesional */
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.1));
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 1rem;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.image-card:hover .image-overlay {
+  opacity: 1;
+}
+
+/* Botón cambiar */
+.change-image-btn {
+  background-color: white;
+  color: var(--text-color);
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Placeholder vacío */
+.upload-placeholder {
+  height: 200px;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  background-color: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.upload-placeholder:hover {
+  border-color: var(--primary-color);
+  background-color: #f9fafb;
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-light);
+}
+
+.upload-content svg {
+  width: 42px;
+  height: 42px;
+}
+
+.upload-content span {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.upload-content small {
+  font-size: 0.75rem;
+}
+
+/* Acciones en preview */
+.image-overlay.actions {
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Botones circulares grandes */
+.icon-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.icon-btn svg {
+  width: 26px;
+  height: 26px;
+}
+
+.icon-btn.success {
+  background-color: #16a34a;
+  color: #fff;
+}
+
+.icon-btn.success:hover {
+  background-color: #15803d;
+  transform: scale(1.05);
+}
+
+.icon-btn.danger {
+  background-color: #dc2626;
+  color: #fff;
+}
+
+.icon-btn.danger:hover {
+  background-color: #b91c1c;
+  transform: scale(1.05);
+}
+
+.icon-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -2,12 +2,13 @@ package com.rige.services;
 
 import com.rige.dto.request.HotelRequest;
 import com.rige.dto.response.HotelResponse;
+import com.rige.filters.HotelFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface HotelService {
 
-    Page<HotelResponse> findAll(Pageable pageable);
+    Page<HotelResponse> findAll(HotelFilter filter, Pageable pageable);
 
     HotelResponse findById(Long id);
 

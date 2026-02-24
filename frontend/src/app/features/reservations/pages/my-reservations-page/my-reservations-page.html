@@ -1,0 +1,52 @@
+<section class="reservations">
+
+    <h2>My Reservations</h2>
+
+    @if (isLoading()) {
+    <p>Loading reservations...</p>
+    }
+
+    @if (!isLoading() && reservations().length === 0) {
+    <p>No reservations yet.</p>
+    }
+
+    @if (!isLoading() && reservations().length > 0) {
+
+    <div class="reservation-grid">
+        @for (reservation of reservations(); track reservation.id) {
+
+        <div class="reservation-card">
+
+            <p><strong>Room:</strong> {{ reservation.roomId }}</p>
+            <p><strong>Check-in:</strong> {{ reservation.checkInDate }}</p>
+            <p><strong>Check-out:</strong> {{ reservation.checkOutDate }}</p>
+            <p><strong>Status:</strong> {{ reservation.status }}</p>
+
+            @if (reservation.status === 'CONFIRMED') {
+            <button (click)="cancel(reservation.id)">
+                Cancel
+            </button>
+            }
+
+        </div>
+
+        }
+    </div>
+
+    <div class="pagination">
+        <button (click)="previousPage()" [disabled]="page() === 0">
+            Previous
+        </button>
+
+        <span>
+            Page {{ page() + 1 }} / {{ totalPages() }}
+        </span>
+
+        <button (click)="nextPage()" [disabled]="page() + 1 >= totalPages()">
+            Next
+        </button>
+    </div>
+
+    }
+
+</section>
