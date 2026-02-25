@@ -18,4 +18,6 @@ public class ReservationResponse {
     private LocalDate checkOutDate;
     private BigDecimal totalPrice;
     private ReservationStatus status;
+    private UserResponse user;
+    private RoomResponse room;
 }

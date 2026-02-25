@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelSpecifications {
+public class HotelSpecification {
 
     public static Specification<HotelEntity> build(HotelFilter filter) {
         return (root, query, cb) -> {

@@ -8,7 +8,7 @@ import com.rige.filters.HotelFilter;
 import com.rige.mappers.HotelMapper;
 import com.rige.repositories.HotelRepository;
 import com.rige.services.HotelService;
-import com.rige.specifications.HotelSpecifications;
+import com.rige.specifications.HotelSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +27,7 @@ public class HotelServiceImpl implements HotelService {
     @Override
     @Transactional(readOnly = true)
     public Page<HotelResponse> findAll(HotelFilter filter, Pageable pageable) {
-        Specification<HotelEntity> spec = HotelSpecifications.build(filter);
+        Specification<HotelEntity> spec = HotelSpecification.build(filter);
 
         return hotelRepository.findAll(spec, pageable)
                 .map(hotelMapper::toResponseDTO);

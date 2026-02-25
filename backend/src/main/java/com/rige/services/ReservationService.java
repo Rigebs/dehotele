@@ -2,6 +2,7 @@ package com.rige.services;
 
 import com.rige.dto.request.ReservationRequest;
 import com.rige.dto.response.ReservationResponse;
+import com.rige.filters.ReservationFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,5 +16,5 @@ public interface ReservationService {
 
     void cancel(Long reservationId);
 
-    Page<ReservationResponse> findAll(Pageable pageable);
+    Page<ReservationResponse> findAll(ReservationFilter filter, Pageable pageable);
 }

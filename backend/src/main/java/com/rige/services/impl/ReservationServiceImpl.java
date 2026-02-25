@@ -8,14 +8,17 @@ import com.rige.entities.UserEntity;
 import com.rige.enums.ReservationStatus;
 import com.rige.exceptions.BadRequestException;
 import com.rige.exceptions.ResourceNotFoundException;
+import com.rige.filters.ReservationFilter;
 import com.rige.mappers.ReservationMapper;
 import com.rige.repositories.ReservationRepository;
 import com.rige.repositories.RoomRepository;
 import com.rige.repositories.UserRepository;
 import com.rige.services.ReservationService;
+import com.rige.specifications.ReservationSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -137,9 +140,11 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ReservationResponse> findAll(Pageable pageable) {
+    public Page<ReservationResponse> findAll(ReservationFilter filter, Pageable pageable) {
 
-        return reservationRepository.findAll(pageable)
+        Specification<ReservationEntity> spec = ReservationSpecification.build(filter);
+
+        return reservationRepository.findAll(spec, pageable)
                 .map(reservationMapper::toResponseDTO);
     }
 }

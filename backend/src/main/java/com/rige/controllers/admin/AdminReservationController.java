@@ -1,8 +1,10 @@
 package com.rige.controllers.admin;
 
 import com.rige.dto.response.ReservationResponse;
+import com.rige.filters.ReservationFilter;
 import com.rige.services.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +21,8 @@ public class AdminReservationController {
     private final ReservationService reservationService;
 
     @GetMapping
-    public Page<ReservationResponse> getAll(Pageable pageable) {
-        return reservationService.findAll(pageable);
+    public Page<ReservationResponse> getAll(@ParameterObject ReservationFilter filter,
+                                            Pageable pageable) {
+        return reservationService.findAll(filter, pageable);
     }
 }
