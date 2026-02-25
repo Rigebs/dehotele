@@ -1,7 +1,7 @@
 export interface PaginatedResponse<T> {
-  readonly content: readonly T[];
-  readonly page: number;
-  readonly size: number;
-  readonly totalElements: number;
-  readonly totalPages: number;
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }

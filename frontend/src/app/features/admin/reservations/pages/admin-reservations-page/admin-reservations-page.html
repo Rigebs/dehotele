@@ -1,0 +1,93 @@
+<div class="admin-container">
+    <header class="header">
+        <div class="header-content">
+            <h1>Gestión de Reservas</h1>
+            <p class="subtitle">Supervisa la actividad y el estado de los ingresos</p>
+        </div>
+        <button class="btn-primary" (click)="onCreateReservation()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Nueva Reserva</span>
+        </button>
+    </header>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <div class="search-box">
+                <input type="text" placeholder="Buscar por huésped o habitación..." class="search-input"
+                    (input)="onSearch($event)">
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <app-select [options]="statusOptions" [ngModel]="statusFilter()"
+                (ngModelChange)="statusFilter.set($event); onFilterChange()" placeholder="Estado">
+            </app-select>
+
+            <app-date-picker [ngModel]="startDate()" (ngModelChange)="startDate.set($event); onFilterChange()"
+                placeholder="Fecha inicio">
+            </app-date-picker>
+
+            <app-date-picker [ngModel]="endDate()" (ngModelChange)="endDate.set($event); onFilterChange()"
+                placeholder="Fecha fin">
+            </app-date-picker>
+        </div>
+    </div>
+
+    @if (hasActiveFilters()) {
+    <div class="active-filters-bar">
+        <div class="filters-info">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="filter-icon">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span class="filters-label">Filtros activos</span>
+        </div>
+
+        <div class="chips-group">
+            @if (searchTerm()) {
+            <div class="chip">
+                <span class="chip-content">Búsqueda: <strong>{{ searchTerm() }}</strong></span>
+                <button class="chip-remove" (click)="searchTerm.set(''); onFilterChange()">×</button>
+            </div>
+            }
+            @if (statusFilter() !== 'ALL') {
+            <div class="chip">
+                <span class="chip-content">Estado: <strong>{{ statusFilter() }}</strong></span>
+                <button class="chip-remove" (click)="onStatusChange('ALL')">×</button>
+            </div>
+            }
+            @if (startDate() || endDate()) {
+            <div class="chip">
+                <span class="chip-content">Rango: <strong>{{ startDate() || '...' }} - {{ endDate() || '...'
+                        }}</strong></span>
+                <button class="chip-remove"
+                    (click)="startDate.set(null); endDate.set(null); onFilterChange()">×</button>
+            </div>
+            }
+
+            <div class="divider"></div>
+
+            <button class="btn-clear-all" (click)="clearFilters()">
+                Limpiar todo
+            </button>
+        </div>
+    </div>
+    }
+
+    @if (isLoading()) {
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando reservas...</p>
+    </div>
+    } @else {
+    <app-admin-reservations-table [reservations]="filteredReservations()" [currentPage]="currentPage()"
+        [totalPages]="totalPages()" [totalElements]="totalElements()" [isLoading]="isLoading()"
+        (pageChange)="handlePageChange($event)" (cancelReservation)="handleCancel($event)">
+    </app-admin-reservations-table>
+    }
+</div>

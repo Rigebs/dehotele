@@ -34,7 +34,6 @@ export class Select implements ControlValueAccessor {
   @Input() placeholder: string = 'Select option';
   @Input() label?: string;
 
-  // 🔥 SIGNALS
   isOpen = signal(false);
   selectedValue = signal<any>(null);
 
@@ -57,8 +56,6 @@ export class Select implements ControlValueAccessor {
     this.onTouched();
   }
 
-  // 🔥 CONTROL VALUE ACCESSOR METHODS
-
   writeValue(value: any): void {
     this.selectedValue.set(value);
   }
@@ -71,11 +68,8 @@ export class Select implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    // opcional si quieres manejar disabled visualmente
-  }
+  setDisabledState(isDisabled: boolean): void {}
 
-  // ✅ CLICK OUTSIDE
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent) {
     if (!this.elementRef.nativeElement.contains(event.target)) {

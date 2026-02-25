@@ -1,0 +1,100 @@
+/* Contenedor principal para ocupar el ancho de la página administrativa */
+.admin-form-page {
+  padding: 2rem;
+  max-width: 900px; /* Un poco más ancho para aprovechar el espacio */
+  margin: 0 auto;
+}
+
+.form-title {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+  color: var(--text-light);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+/* Grid de Formulario utilizando tu utilidad .grid o personalizada */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Control de campos */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+/* Inputs usando tus estilos base pero extendidos */
+.form-field input {
+  width: 100%;
+  border: 1px solid #d1d5db; /* color de tu styles.css */
+  border-radius: var(--radius-sm);
+  padding: 0.75rem; /* un poco más de aire */
+  transition: var(--transition);
+}
+
+.form-field input:focus {
+  border-color: var(--primary-color);
+}
+
+/* Acciones del formulario */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Botón reutilizando tu clase lógica */
+.btn-submit {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #172554; /* Un azul más oscuro */
+  transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  background-color: var(--text-light);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  background: #fef2f2;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #fecaca;
+}
+
+/* Responsividad */
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

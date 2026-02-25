@@ -21,6 +21,13 @@ export const ADMIN_ROUTES: Routes = [
         loadChildren: () =>
           import('./hotels/admin-hotels.routes').then((m) => m.ADMIN_HOTELS_ROUTES),
       },
+      {
+        path: 'reservations',
+        loadChildren: () =>
+          import('./reservations/admin-reservations.routes').then(
+            (m) => m.ADMIN_RESERVATIONS_ROUTES,
+          ),
+      },
     ],
   },
 ];

@@ -1,0 +1,48 @@
+<div class="admin-form-page">
+    <header class="mb-4">
+        <h1 class="form-title">Nueva Reserva</h1>
+        <p class="form-subtitle">Ingresa los datos para registrar una reserva manualmente en el sistema.</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+            <div class="form-field">
+                <label>ID del Cliente</label>
+                <input type="number" formControlName="userId" placeholder="Ej. 101" />
+            </div>
+
+            <div class="form-field">
+                <label>ID de Habitación</label>
+                <input type="number" formControlName="roomId" placeholder="Ej. 5" />
+            </div>
+
+            <div class="form-field">
+                <label>Fecha de Entrada</label>
+                <input type="date" formControlName="checkInDate" />
+            </div>
+
+            <div class="form-field">
+                <label>Fecha de Salida</label>
+                <input type="date" formControlName="checkOutDate" />
+            </div>
+        </div>
+
+        @if (errorMessage()) {
+        <p class="error-message mb-4">
+            <strong>Error:</strong> {{ errorMessage() }}
+        </p>
+        }
+
+        <div class="form-actions">
+            <button type="button" class="p-2" (click)="form.reset()">Limpiar</button>
+
+            <button type="submit" class="btn-submit" [disabled]="form.invalid || isLoading()">
+                @if (isLoading()) {
+                <span class="spinner"></span> Procesando...
+                } @else {
+                Crear Reserva
+                }
+            </button>
+        </div>
+    </form>
+</div>

@@ -91,7 +91,7 @@ export class AuthService {
 
     this._currentUser.set({
       id: 0,
-      name: payload.sub,
+      fullName: payload.sub,
       email: payload.sub,
       role: payload.role as 'USER' | 'ADMIN',
     });

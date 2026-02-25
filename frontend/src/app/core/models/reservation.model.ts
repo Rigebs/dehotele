@@ -1,13 +1,23 @@
+import { User } from './auth.model';
+import { Room } from './room.model';
+
 export interface ReservationRequest {
-  readonly roomId: number;
-  readonly checkInDate: string; // ISO yyyy-MM-dd
-  readonly checkOutDate: string;
+  roomId: number;
+  checkInDate: string;
+  checkOutDate: string;
 }
 
 export interface ReservationResponse {
-  readonly id: number;
-  readonly roomId: number;
-  readonly checkInDate: string;
-  readonly checkOutDate: string;
-  readonly status: string;
+  id: number;
+  checkInDate: string;
+  checkOutDate: string;
+  totalPrice: number;
+  status: string;
+  roomId: number;
+  customerName: string;
+  customerEmail: string;
+  roomType: string;
+  roomNumber: string;
+  user: User;
+  room: Room;
 }

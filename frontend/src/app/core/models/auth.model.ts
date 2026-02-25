@@ -16,7 +16,7 @@ export interface AuthResponse {
 
 export interface User {
   readonly id: number;
-  readonly name: string;
+  readonly fullName: string;
   readonly email: string;
   readonly role: 'USER' | 'ADMIN';
 }
