@@ -6,21 +6,24 @@ import {
   signal,
   computed,
   forwardRef,
+  ChangeDetectionStrategy,
+  input,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface SelectOption {
   label: string;
-  value: any;
+  value: unknown;
 }
 
 @Component({
   selector: 'app-select',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './select.html',
-  styleUrls: ['./select.css'],
+  styleUrl: './select.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -28,53 +31,95 @@ export interface SelectOption {
       multi: true,
     },
   ],
+  host: {
+    '(document:click)': 'onDocumentClick($event)',
+    '(window:scroll)': 'onWindowScroll()',
+  },
 })
 export class Select implements ControlValueAccessor {
-  @Input() options: SelectOption[] = [];
-  @Input() placeholder: string = 'Select option';
-  @Input() label?: string;
+  options = input<SelectOption[]>([]);
+  placeholder = input<string>('Select option');
+  label = input<string | undefined>();
+
+  private readonly elementRef = inject(ElementRef);
+  readonly popoverId = `select-${Math.random().toString(36).substring(2, 9)}`;
 
   isOpen = signal(false);
-  selectedValue = signal<any>(null);
+  selectedValue = signal<unknown>(null);
+  selectedOption = computed(() => this.options().find((o) => o.value === this.selectedValue()));
 
-  selectedOption = computed(() => this.options.find((o) => o.value === this.selectedValue()));
-
-  private onChange: (value: any) => void = () => {};
+  private onChange: (value: unknown) => void = () => {};
   private onTouched: () => void = () => {};
 
-  constructor(private elementRef: ElementRef) {}
-
-  toggle() {
-    this.isOpen.update((v) => !v);
-  }
-
-  select(option: SelectOption) {
-    this.selectedValue.set(option.value);
-    this.isOpen.set(false);
-
-    this.onChange(option.value);
-    this.onTouched();
-  }
-
-  writeValue(value: any): void {
+  writeValue(value: unknown): void {
     this.selectedValue.set(value);
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: unknown) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {}
-
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent) {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.isOpen.set(false);
-      this.onTouched();
+  toggle(btn: HTMLElement): void {
+    const menu = document.getElementById(this.popoverId) as any;
+    if (!this.isOpen()) {
+      this.checkPosition(btn);
+      menu?.showPopover();
+    } else {
+      menu?.hidePopover();
     }
+    this.isOpen.update((v) => !v);
+    this.onTouched();
+  }
+
+  select(option: SelectOption): void {
+    this.selectedValue.set(option.value);
+    this.onChange(option.value);
+
+    const menu = document.getElementById(this.popoverId) as any;
+    menu?.hidePopover();
+    this.isOpen.set(false);
+  }
+
+  onWindowScroll(): void {
+    if (this.isOpen()) {
+      const btn = this.elementRef.nativeElement.querySelector('.select-box');
+      if (btn) this.checkPosition(btn);
+    }
+  }
+
+  onDocumentClick(event: MouseEvent): void {
+    if (this.isOpen() && !this.elementRef.nativeElement.contains(event.target)) {
+      const menu = document.getElementById(this.popoverId) as any;
+      menu?.hidePopover();
+      this.isOpen.set(false);
+    }
+  }
+
+  private checkPosition(btn: HTMLElement): void {
+    const menu = document.getElementById(this.popoverId);
+    if (!menu) return;
+
+    const rect = btn.getBoundingClientRect();
+    const vH = window.innerHeight;
+    const vW = window.innerWidth;
+    const dropdownHeight = 250;
+
+    menu.style.position = 'fixed';
+    menu.style.inset = 'unset';
+    menu.style.width = `${rect.width}px`;
+
+    if (vH - rect.bottom < dropdownHeight && rect.top > dropdownHeight) {
+      menu.style.top = 'auto';
+      menu.style.bottom = `${vH - rect.top + 4}px`;
+    } else {
+      menu.style.bottom = 'auto';
+      menu.style.top = `${rect.bottom + 4}px`;
+    }
+
+    menu.style.left = `${rect.left}px`;
   }
 }

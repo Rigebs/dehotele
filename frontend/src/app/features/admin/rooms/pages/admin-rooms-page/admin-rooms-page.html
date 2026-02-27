@@ -1,0 +1,80 @@
+<div class="admin-container">
+    <header class="header">
+        <div class="header-content">
+            <nav class="breadcrumb">
+                <a routerLink="/admin/hotels">Hoteles</a>
+                <span class="separator">/</span>
+                <span class="current-hotel">{{ hotelInfo()?.name || 'Cargando...' }}</span>
+            </nav>
+            <h1>Gestión de Habitaciones</h1>
+            <p class="subtitle">Administra el inventario, precios y capacidad de las unidades</p>
+        </div>
+        <button class="btn-primary" (click)="onCreateRoom()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Nueva Habitación</span>
+        </button>
+    </header>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <input type="text" placeholder="Buscar por nombre de habitación..." class="search-input"
+                [value]="searchTerm()" (input)="onSearch($event)">
+        </div>
+
+        <div class="filter-group">
+            <app-select [options]="capacityOptions" [ngModel]="capacityFilter()"
+                (ngModelChange)="capacityFilter.set($event); onFilterChange()" placeholder="Capacidad">
+            </app-select>
+        </div>
+    </div>
+
+    @if (hasActiveFilters()) {
+    <div class="active-filters-bar">
+        <div class="filters-info">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="filter-icon">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span class="filters-label">Filtros activos</span>
+        </div>
+
+        <div class="chips-group">
+            @if (searchTerm()) {
+            <div class="chip">
+                <span class="chip-content">Búsqueda: <strong>{{ searchTerm() }}</strong></span>
+                <button class="chip-remove" (click)="searchTerm.set(''); onFilterChange()">×</button>
+            </div>
+            }
+            @if (capacityFilter() !== 'ALL') {
+            <div class="chip">
+                <span class="chip-content">Capacidad: <strong>{{ capacityFilter() }}</strong></span>
+                <button class="chip-remove" (click)="capacityFilter.set('ALL'); onFilterChange()">×</button>
+            </div>
+            }
+
+            <div class="divider"></div>
+
+            <button class="btn-clear-all" (click)="clearFilters()">
+                Limpiar todo
+            </button>
+        </div>
+    </div>
+    }
+
+    @if (isLoading()) {
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando habitaciones...</p>
+    </div>
+    } @else {
+    <app-admin-rooms-table [rooms]="filteredRooms()" [currentPage]="currentPage()" [totalPages]="totalPages()"
+        [totalElements]="totalElements()" [isLoading]="isLoading()" (pageChange)="handlePageChange($event)"
+        (deleteRoom)="handleDelete($event)" (editRoom)="handleEdit($event)">
+    </app-admin-rooms-table>
+    }
+</div>

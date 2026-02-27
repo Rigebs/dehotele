@@ -1,22 +1,22 @@
 import {
   Component,
-  forwardRef,
-  Input,
-  signal,
-  computed,
-  HostListener,
+  ChangeDetectionStrategy,
   ElementRef,
   inject,
+  input,
+  signal,
+  computed,
+  forwardRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-date-picker',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DatePipe],
   templateUrl: './date-picker.html',
   styleUrl: './date-picker.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -24,30 +24,27 @@ import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/f
       multi: true,
     },
   ],
+  host: {
+    '(document:click)': 'onDocumentClick($event)',
+    '(window:scroll)': 'onWindowScroll()',
+  },
 })
 export class DatePicker implements ControlValueAccessor {
-  @Input() label = '';
-  @Input() placeholder = 'Seleccionar fecha';
-  @Input() minDate?: Date;
-  @Input() maxDate?: Date;
+  label = input<string>('');
+  placeholder = input<string>('Seleccionar fecha');
+  minDate = input<Date | undefined>();
+  maxDate = input<Date | undefined>();
 
-  private elementRef = inject(ElementRef);
+  private readonly elementRef = inject(ElementRef);
+  readonly popoverId = `datepicker-${Math.random().toString(36).substring(2, 9)}`;
 
   isOpen = signal(false);
-  alignRight = signal(false); // Nueva señal para control de colisión
   selectedDate = signal<Date | null>(null);
   currentMonth = signal(new Date());
-
-  weekDays = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
   monthDirection = signal<'left' | 'right'>('right');
 
-  years = computed(() => {
-    const minYear = this.minDate ? this.minDate.getFullYear() : new Date().getFullYear() - 5;
-    const maxYear = this.maxDate ? this.maxDate.getFullYear() : new Date().getFullYear() + 5;
-    return Array.from({ length: maxYear - minYear + 1 }, (_, i) => minYear + i);
-  });
-
-  months = [
+  readonly weekDays = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+  readonly months = [
     'Enero',
     'Febrero',
     'Marzo',
@@ -62,8 +59,25 @@ export class DatePicker implements ControlValueAccessor {
     'Diciembre',
   ];
 
-  onChange: any = () => {};
-  onTouched: any = () => {};
+  years = computed(() => {
+    const min = this.minDate()?.getFullYear() ?? new Date().getFullYear() - 5;
+    const max = this.maxDate()?.getFullYear() ?? new Date().getFullYear() + 5;
+    return Array.from({ length: max - min + 1 }, (_, i) => min + i);
+  });
+
+  calendarDays = computed(() => {
+    const date = this.currentMonth();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+    const offset = firstDay === 0 ? 6 : firstDay - 1;
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+
+    const days: (number | null)[] = Array(offset).fill(null);
+    for (let i = 1; i <= lastDay; i++) days.push(i);
+    return days;
+  });
+
+  private onChange: (value: string | null) => void = () => {};
+  private onTouched: () => void = () => {};
 
   writeValue(value: string | null): void {
     if (value) {
@@ -75,88 +89,66 @@ export class DatePicker implements ControlValueAccessor {
     }
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string | null) => void): void {
     this.onChange = fn;
   }
-  registerOnTouched(fn: any): void {
+
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
-  toggle() {
+  toggle(btn: HTMLElement): void {
+    const menu = document.getElementById(this.popoverId) as any;
     if (!this.isOpen()) {
-      this.checkPosition();
+      this.checkPosition(btn);
+      menu?.showPopover();
+    } else {
+      menu?.hidePopover();
     }
     this.isOpen.update((v) => !v);
     this.onTouched();
   }
 
-  private checkPosition() {
-    const rect = this.elementRef.nativeElement.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const calendarWidth = 300; // Ancho aproximado del calendario
-
-    // Si el calendario se sale por la derecha, alineamos a la derecha del input
-    if (rect.left + calendarWidth > viewportWidth) {
-      this.alignRight.set(true);
-    } else {
-      this.alignRight.set(false);
-    }
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (!this.isOpen()) return;
-    const clickedInside = this.elementRef.nativeElement.contains(event.target);
-    if (!clickedInside) {
-      this.isOpen.set(false);
-    }
-  }
-
-  @HostListener('window:resize')
-  onResize() {
-    if (this.isOpen()) this.checkPosition();
-  }
-
-  selectDate(day: number) {
+  selectDate(day: number): void {
     const month = this.currentMonth();
     const selected = new Date(month.getFullYear(), month.getMonth(), day);
     if (this.isDisabled(selected)) return;
+
     this.selectedDate.set(selected);
     this.onChange(this.formatDate(selected));
+
+    const menu = document.getElementById(this.popoverId) as any;
+    menu?.hidePopover();
     this.isOpen.set(false);
   }
 
-  updateMonth(monthIndex: number) {
+  updateMonth(monthIndex: number): void {
     const current = this.currentMonth();
     this.currentMonth.set(new Date(current.getFullYear(), monthIndex, 1));
   }
 
-  updateYear(year: number) {
+  updateYear(year: number): void {
     const current = this.currentMonth();
     this.currentMonth.set(new Date(year, current.getMonth(), 1));
   }
 
-  previousMonth() {
+  previousMonth(): void {
     const current = this.currentMonth();
     this.monthDirection.set('left');
     this.currentMonth.set(new Date(current.getFullYear(), current.getMonth() - 1, 1));
   }
 
-  nextMonth() {
+  nextMonth(): void {
     const current = this.currentMonth();
     this.monthDirection.set('right');
     this.currentMonth.set(new Date(current.getFullYear(), current.getMonth() + 1, 1));
   }
 
-  formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
-
   isSelected(day: number): boolean {
     const selected = this.selectedDate();
-    if (!selected) return false;
     const current = this.currentMonth();
     return (
+      !!selected &&
       selected.getDate() === day &&
       selected.getMonth() === current.getMonth() &&
       selected.getFullYear() === current.getFullYear()
@@ -164,24 +156,62 @@ export class DatePicker implements ControlValueAccessor {
   }
 
   isDisabled(date: Date): boolean {
-    if (this.minDate && date < this.minDate) return true;
-    if (this.maxDate && date > this.maxDate) return true;
-    return false;
-  }
-
-  getCalendarDays(): (number | null)[] {
-    const date = this.currentMonth();
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-    const offset = firstDay === 0 ? 6 : firstDay - 1;
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-    const days: (number | null)[] = [];
-    for (let i = 0; i < offset; i++) days.push(null);
-    for (let i = 1; i <= lastDay; i++) days.push(i);
-    return days;
+    const min = this.minDate();
+    const max = this.maxDate();
+    return (!!min && date < min) || (!!max && date > max);
   }
 
   getDateForDay(day: number): Date {
     const current = this.currentMonth();
     return new Date(current.getFullYear(), current.getMonth(), day);
+  }
+
+  onWindowScroll(): void {
+    if (this.isOpen()) {
+      const btn = this.elementRef.nativeElement.querySelector('.input');
+      if (btn) this.checkPosition(btn);
+    }
+  }
+
+  onDocumentClick(event: MouseEvent): void {
+    if (this.isOpen() && !this.elementRef.nativeElement.contains(event.target)) {
+      const menu = document.getElementById(this.popoverId) as any;
+      menu?.hidePopover();
+      this.isOpen.set(false);
+    }
+  }
+
+  private checkPosition(btn: HTMLElement): void {
+    const menu = document.getElementById(this.popoverId);
+    if (!menu) return;
+
+    const rect = btn.getBoundingClientRect();
+    const vH = window.innerHeight;
+    const vW = window.innerWidth;
+    const cHeight = 350;
+    const cWidth = 300;
+
+    menu.style.position = 'fixed';
+    menu.style.inset = 'unset';
+
+    if (vH - rect.bottom < cHeight && rect.top > cHeight) {
+      menu.style.top = 'auto';
+      menu.style.bottom = `${vH - rect.top + 5}px`;
+    } else {
+      menu.style.bottom = 'auto';
+      menu.style.top = `${rect.bottom + 5}px`;
+    }
+
+    if (rect.left + cWidth > vW) {
+      menu.style.left = 'auto';
+      menu.style.right = `${vW - rect.right}px`;
+    } else {
+      menu.style.right = 'auto';
+      menu.style.left = `${rect.left}px`;
+    }
+  }
+
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 }

@@ -1,0 +1,62 @@
+<div class="admin-form-page">
+    <header class="mb-4">
+        <h1 class="form-title">
+            {{ isEditMode() ? 'Editar Habitación' : 'Nueva Habitación' }}
+        </h1>
+        <p class="form-subtitle">
+            {{ isEditMode() ? 'Modifica los parámetros de esta unidad.' : 'Configura los detalles del nuevo inventario.'
+            }}
+        </p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+            <div class="form-field full-width">
+                <label>Nombre / Tipo de Habitación</label>
+                <input type="text" formControlName="name"
+                    placeholder="Ej. Suite Presidencial o Habitación Doble Standard" />
+                @if (form.controls.name.touched && form.controls.name.invalid) {
+                <small class="text-danger">El nombre es obligatorio (mín. 3 caracteres).</small>
+                }
+            </div>
+
+            <div class="form-field">
+                <label>Precio por Noche ($)</label>
+                <input type="number" formControlName="pricePerNight" placeholder="0.00" step="0.01" />
+                @if (form.controls.pricePerNight.touched && form.controls.pricePerNight.invalid) {
+                <small class="text-danger">El precio debe ser mayor a 0.</small>
+                }
+            </div>
+
+            <div class="form-field">
+                <label>Capacidad de Personas</label>
+                <app-select [options]="capacityOptions" formControlName="capacity">
+                </app-select>
+
+                @if (form.controls.capacity.touched && form.controls.capacity.invalid) {
+                <small class="text-danger">La capacidad es obligatoria.</small>
+                }
+            </div>
+        </div>
+
+        @if (errorMessage()) {
+        <p class="error-message mb-4">
+            <strong>Error:</strong> {{ errorMessage() }}
+        </p>
+        }
+
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="onCancel()" [disabled]="isLoading()">
+                Cancelar
+            </button>
+
+            <button type="submit" class="btn-submit" [disabled]="form.invalid || isLoading()">
+                @if (isLoading()) {
+                <span class="spinner"></span> Procesando...
+                } @else {
+                {{ isEditMode() ? 'Guardar Cambios' : 'Crear Habitación' }}
+                }
+            </button>
+        </div>
+    </form>
+</div>

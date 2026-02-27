@@ -20,4 +20,8 @@ export const ADMIN_HOTELS_ROUTES: Routes = [
         (m) => m.AdminHotelFormPage,
       ),
   },
+  {
+    path: ':hotelId/rooms',
+    loadChildren: () => import('../rooms/admin-rooms.routes').then((m) => m.ADMIN_ROOMS_ROUTES),
+  },
 ];

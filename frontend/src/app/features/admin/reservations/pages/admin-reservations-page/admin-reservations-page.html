@@ -2,75 +2,138 @@
     <header class="header">
         <div class="header-content">
             <h1>Gestión de Reservas</h1>
-            <p class="subtitle">Supervisa la actividad y el estado de los ingresos</p>
+            <p class="subtitle">Administra los ingresos y ocupación de todos los hoteles</p>
         </div>
-        <button class="btn-primary" (click)="onCreateReservation()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>Nueva Reserva</span>
-        </button>
+        <div class="header-actions">
+            <button class="btn-secondary" (click)="exportData()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Exportar
+            </button>
+            <button class="btn-primary" (click)="onCreateReservation()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Nueva Reserva
+            </button>
+        </div>
     </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Total Reservas</span>
+            <span class="stat-value">{{ totalElements() }}</span>
+        </div>
+        <div class="stat-card success">
+            <span class="stat-label">Confirmadas</span>
+            <span class="stat-value">--</span>
+        </div>
+        <div class="stat-card warning">
+            <span class="stat-label">Pendientes</span>
+            <span class="stat-value">--</span>
+        </div>
+    </div>
 
     <div class="toolbar">
         <div class="search-box">
-            <div class="search-box">
-                <input type="text" placeholder="Buscar por huésped o habitación..." class="search-input"
-                    (input)="onSearch($event)">
-            </div>
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" [value]="searchTerm()" placeholder="Buscar huésped, DNI o reserva..."
+                class="search-input" (input)="onSearch($event)">
         </div>
 
-        <div class="filter-group">
-            <app-select [options]="statusOptions" [ngModel]="statusFilter()"
-                (ngModelChange)="statusFilter.set($event); onFilterChange()" placeholder="Estado">
-            </app-select>
-
-            <app-date-picker [ngModel]="startDate()" (ngModelChange)="startDate.set($event); onFilterChange()"
-                placeholder="Fecha inicio">
-            </app-date-picker>
-
-            <app-date-picker [ngModel]="endDate()" (ngModelChange)="endDate.set($event); onFilterChange()"
-                placeholder="Fecha fin">
-            </app-date-picker>
-        </div>
+        <button class="btn-filter" (click)="openFilters()" [class.active]="hasActiveFilters()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Filtros
+            @if (hasActiveFilters()) {
+            <span class="filter-badge">!</span>
+            }
+        </button>
     </div>
 
     @if (hasActiveFilters()) {
     <div class="active-filters-bar">
-        <div class="filters-info">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="filter-icon">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        <div class="active-filters-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 7h-9" />
+                <path d="M14 17H5" />
+                <circle cx="17" cy="17" r="3" />
+                <circle cx="7" cy="7" r="3" />
             </svg>
-            <span class="filters-label">Filtros activos</span>
+            <span>Filtros activos:</span>
         </div>
 
         <div class="chips-group">
             @if (searchTerm()) {
             <div class="chip">
-                <span class="chip-content">Búsqueda: <strong>{{ searchTerm() }}</strong></span>
-                <button class="chip-remove" (click)="searchTerm.set(''); onFilterChange()">×</button>
-            </div>
-            }
-            @if (statusFilter() !== 'ALL') {
-            <div class="chip">
-                <span class="chip-content">Estado: <strong>{{ statusFilter() }}</strong></span>
-                <button class="chip-remove" (click)="onStatusChange('ALL')">×</button>
-            </div>
-            }
-            @if (startDate() || endDate()) {
-            <div class="chip">
-                <span class="chip-content">Rango: <strong>{{ startDate() || '...' }} - {{ endDate() || '...'
-                        }}</strong></span>
-                <button class="chip-remove"
-                    (click)="startDate.set(null); endDate.set(null); onFilterChange()">×</button>
+                <span class="chip-key">Búsqueda</span>
+                <span class="chip-value">{{ searchTerm() }}</span>
+                <button class="chip-remove" (click)="searchTerm.set(''); onFilterChange()" title="Eliminar búsqueda">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
             }
 
-            <div class="divider"></div>
+            @if (hotelFilter() !== 'ALL') {
+            <div class="chip">
+                <span class="chip-key">Hotel</span>
+                <span class="chip-value">{{ hotelFilter() }}</span>
+                <button class="chip-remove" (click)="hotelFilter.set('ALL'); onFilterChange()" title="Eliminar hotel">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            }
+
+            @if (statusFilter() !== 'ALL') {
+            <div class="chip">
+                <span class="chip-key">Estado</span>
+                <span class="chip-value">{{ statusFilter() }}</span>
+                <button class="chip-remove" (click)="statusFilter.set('ALL'); onFilterChange()" title="Eliminar estado">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            }
+
+            @if (startDate() || endDate()) {
+            <div class="chip">
+                <span class="chip-key">Fecha</span>
+                <span class="chip-value">{{ startDate() | date:'dd/MM/yyyy' }} - {{ endDate() | date:'dd/MM/yyyy'
+                    }}</span>
+                <button class="chip-remove" (click)="startDate.set(null); endDate.set(null); onFilterChange()"
+                    title="Eliminar rango de fechas">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            }
 
             <button class="btn-clear-all" (click)="clearFilters()">
                 Limpiar todo
@@ -82,12 +145,49 @@
     @if (isLoading()) {
     <div class="loading-container">
         <div class="spinner"></div>
-        <p>Cargando reservas...</p>
+        <p>Actualizando lista de reservas...</p>
     </div>
     } @else {
-    <app-admin-reservations-table [reservations]="filteredReservations()" [currentPage]="currentPage()"
+    <app-admin-reservations-table [reservations]="reservations()" [currentPage]="currentPage()"
         [totalPages]="totalPages()" [totalElements]="totalElements()" [isLoading]="isLoading()"
-        (pageChange)="handlePageChange($event)" (cancelReservation)="handleCancel($event)">
+        (pageChange)="handlePageChange($event)">
     </app-admin-reservations-table>
     }
 </div>
+
+<dialog #filterDialog class="filter-modal">
+    <div class="modal-header">
+        <h2>Filtros Avanzados</h2>
+        <button class="close-modal" (click)="closeFilters()">×</button>
+    </div>
+    <div class="modal-body">
+        <div class="filter-field">
+            <label>Hotel</label>
+            <app-select [options]="hotels()" [(ngModel)]="tempFilters.hotel" placeholder="Todos los Hoteles">
+            </app-select>
+        </div>
+
+        <div class="filter-field">
+            <label>Estado de Reserva</label>
+            <app-select [options]="statusOptions" [(ngModel)]="tempFilters.status" placeholder="Todos los Estados">
+            </app-select>
+        </div>
+
+        <div class="filter-row">
+            <div class="filter-field">
+                <label>Fecha Inicio</label>
+                <app-date-picker [(ngModel)]="tempFilters.startDate" placeholder="Desde">
+                </app-date-picker>
+            </div>
+            <div class="filter-field">
+                <label>Fecha Fin</label>
+                <app-date-picker [(ngModel)]="tempFilters.endDate" placeholder="Hasta">
+                </app-date-picker>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn-secondary" (click)="clearFilters(); closeFilters()">Restablecer</button>
+        <button class="btn-primary" (click)="applyFilters()">Aplicar Filtros</button>
+    </div>
+</dialog>

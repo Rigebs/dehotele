@@ -47,6 +47,10 @@ export class HotelService {
     return this.http.get<PageResponse<Hotel>>(this.apiUrl, { params });
   }
 
+  getAllLightweight() {
+    return this.http.get<readonly Hotel[]>(`${this.apiUrl}/lightweight`);
+  }
+
   getHotelById(id: number) {
     return this.http.get<Hotel>(`${this.apiUrl}/${id}`);
   }

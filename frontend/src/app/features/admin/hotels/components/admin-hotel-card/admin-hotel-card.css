@@ -1,70 +1,164 @@
-.hotel-card {
-  display: flex;
-  flex-direction: column;
+:host {
+  display: block;
   height: 100%;
 }
 
-.hotel-image img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-  margin-bottom: 0.75rem;
-}
-
-.hotel-header {
+.hotel-card {
+  background: var(--bg-color);
+  border-radius: var(--radius-md);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+  transition: var(--transition);
+  box-shadow: 0 4px 6px -1px var(--shadow-color);
+}
+
+.hotel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -8px var(--shadow-color);
+}
+
+/* Contenedor de Imagen y Rating */
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 180px;
+}
+
+.hotel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rating-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  display: flex;
   align-items: center;
-}
-
-.rating {
+  gap: 4px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--accent-color);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
-.city {
-  font-weight: 500;
-}
-
-.address {
+.reviews {
+  font-weight: 400;
   color: var(--text-light);
-  font-size: 0.9rem;
+  font-size: 0.75rem;
+}
+
+/* Cuerpo de la Card */
+.hotel-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.hotel-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-light);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
 }
 
 .description {
   font-size: 0.9rem;
-  color: var(--text-light);
-  line-height: 1.4;
-  max-height: 60px;
+  color: var(--text-color);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.amenities {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.amenity {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  background-color: rgba(30, 58, 138, 0.08);
-  border-radius: var(--radius-sm);
-}
-
-.actions {
+/* Botones y Acciones */
+.card-footer {
   margin-top: auto;
   display: flex;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-button.danger {
-  background-color: #dc2626;
-  color: #fff;
+.btn-manage {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
-button.danger:hover {
-  background-color: #b91c1c;
+.btn-manage:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.btn-outline,
+.btn-danger-light {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-outline {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: var(--text-color);
+}
+
+.btn-outline:hover {
+  background: #f9fafb;
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn-danger-light {
+  background: #fff1f2;
+  border: 1px solid #ffe4e6;
+  color: #e11d48;
+}
+
+.btn-danger-light:hover {
+  background: #ffe4e6;
+  border-color: #fecdd3;
 }

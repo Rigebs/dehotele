@@ -1,5 +1,4 @@
 .date-picker {
-  position: relative;
   width: 100%;
   font-size: 0.95rem;
 }
@@ -9,44 +8,47 @@
   margin-bottom: 0.35rem;
   font-size: 0.85rem;
   font-weight: 500;
-  color: var(--text-light); /* Usando tu gris claro */
+  color: var(--text-light);
 }
 
 .date-picker .input {
-  background-color: var(--bg-color); /* Usando tu fondo blanco */
+  background-color: var(--bg-color, #fff);
   border: 1px solid #d1d5db;
-  border-radius: var(--radius-sm); /* Usando tu radio pequeño */
+  border-radius: var(--radius-sm, 8px);
   padding: 0.65rem 0.9rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: var(--transition); /* Usando tu transición global */
+  transition: var(--transition, all 0.2s ease);
   min-height: 45px;
 }
 
 .date-picker .input:hover {
-  border-color: var(--primary-color); /* Usando tu azul elegante */
+  border-color: var(--primary-color, #1e3a8a);
 }
 
-/* CALENDARIO */
-.date-picker .calendar {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 0;
-  background: var(--bg-color);
-  border-radius: var(--radius-md); /* Usando tu radio medio */
-  box-shadow: 0 10px 25px var(--shadow-color); /* Usando tu sombra global */
+.calendar {
+  position: fixed;
+  inset: unset;
+  border: none;
+  margin: 0;
+  background: var(--bg-color, #fff);
+  border-radius: var(--radius-md, 12px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   padding: 1rem;
-  z-index: 999;
   min-width: 280px;
+  z-index: 9999;
+  display: none;
+}
+
+.calendar:popover-open {
+  display: block;
   animation: fadeIn 0.2s ease-out;
 }
 
-/* CLASE DE CORRECCIÓN PARA BORDES (Smart Dropdown) */
-.date-picker .calendar.drop-left {
-  left: auto;
-  right: 0;
+.calendar[style*='bottom']:popover-open {
+  animation: fadeInAbove 0.2s ease-out;
 }
 
 .calendar-header {
@@ -61,10 +63,10 @@
   border: none;
   font-size: 1.2rem;
   padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-sm);
-  color: var(--primary-color);
+  border-radius: var(--radius-sm, 8px);
+  color: var(--primary-color, #1e3a8a);
   cursor: pointer;
-  transition: var(--transition);
+  transition: var(--transition, all 0.2s);
 }
 
 .calendar-header button:hover {
@@ -75,9 +77,11 @@
   flex: 1;
   padding: 0.3rem;
   border: 1px solid #e5e7eb;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-sm, 8px);
   font-size: 0.85rem;
   font-family: inherit;
+  background-color: white;
+  cursor: pointer;
 }
 
 .week-days {
@@ -86,7 +90,7 @@
   text-align: center;
   font-weight: 600;
   font-size: 0.75rem;
-  color: var(--text-light);
+  color: var(--text-light, #6b7280);
   margin-bottom: 0.5rem;
 }
 
@@ -104,17 +108,17 @@
   cursor: pointer;
   border-radius: 50%;
   font-size: 0.85rem;
-  transition: var(--transition);
-  color: var(--text-color);
+  transition: var(--transition, all 0.2s);
+  color: var(--text-color, #111827);
 }
 
 .day:hover:not(.disabled):not(.selected) {
-  background-color: rgba(30, 58, 138, 0.1); /* Variación de tu primary */
-  color: var(--primary-color);
+  background-color: rgba(30, 58, 138, 0.1);
+  color: var(--primary-color, #1e3a8a);
 }
 
 .day.selected {
-  background-color: var(--primary-color);
+  background-color: var(--primary-color, #1e3a8a);
   color: #fff;
   font-weight: 500;
 }
@@ -122,6 +126,16 @@
 .day.disabled {
   color: #d1d5db;
   cursor: not-allowed;
+}
+
+.calendar-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text-light, #6b7280);
+}
+
+.month-transition {
+  transition: transform 0.3s ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -135,8 +149,13 @@
   }
 }
 
-.calendar-icon {
-  width: 18px;
-  height: 18px;
-  color: var(--text-light);
+@keyframes fadeInAbove {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

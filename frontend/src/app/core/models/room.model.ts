@@ -5,4 +5,5 @@ export interface Room {
   readonly price: number;
   readonly capacity: number;
   readonly available: boolean;
+  readonly pricePerNight: number;
 }
