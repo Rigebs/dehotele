@@ -9,7 +9,9 @@ public interface RoomService {
 
     Page<RoomResponse> findByHotel(Long hotelId, Pageable pageable);
 
-    RoomResponse create(Long hotelId, RoomRequest dto);
+    RoomResponse findById(Long roomId);
+
+    RoomResponse create(RoomRequest dto);
 
     RoomResponse update(Long roomId, RoomRequest dto);
 

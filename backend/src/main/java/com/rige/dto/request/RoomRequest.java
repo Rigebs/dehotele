@@ -22,4 +22,7 @@ public class RoomRequest {
     @NotNull
     @Positive
     private Integer capacity;
+
+    @NotNull
+    private Long hotelId;
 }

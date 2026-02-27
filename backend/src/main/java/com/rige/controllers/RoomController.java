@@ -16,32 +16,37 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/rooms")
 @RequiredArgsConstructor
 public class RoomController {
 
     private final RoomService roomService;
 
-    @GetMapping("/hotels/{hotelId}/rooms")
+    @GetMapping
     public Page<RoomResponse> getRoomsByHotel(
-            @PathVariable Long hotelId,
+            @RequestParam Long hotelId,
             Pageable pageable) {
         return roomService.findByHotel(hotelId, pageable);
     }
 
-    @PostMapping("/hotels/{hotelId}/rooms")
+    @GetMapping("/{roomId}")
+    public RoomResponse getRoomById(@PathVariable Long roomId) {
+        return roomService.findById(roomId);
+    }
+
+    @PostMapping
     public ResponseEntity<RoomResponse> create(
-            @PathVariable Long hotelId,
             @Valid @RequestBody RoomRequest dto) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(roomService.create(hotelId, dto));
+                .body(roomService.create(dto));
     }
 
-    @PutMapping("/rooms/{roomId}")
+    @PutMapping("/{roomId}")
     public RoomResponse update(
             @PathVariable Long roomId,
             @Valid @RequestBody RoomRequest dto) {
@@ -49,7 +54,7 @@ public class RoomController {
         return roomService.update(roomId, dto);
     }
 
-    @DeleteMapping("/rooms/{roomId}")
+    @DeleteMapping("/{roomId}")
     public ResponseEntity<Void> delete(@PathVariable Long roomId) {
 
         roomService.delete(roomId);

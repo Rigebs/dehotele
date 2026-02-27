@@ -40,9 +40,18 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomResponse create(Long hotelId, RoomRequest dto) {
+    @Transactional(readOnly = true)
+    public RoomResponse findById(Long roomId) {
+        RoomEntity room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
 
-        HotelEntity hotel = hotelRepository.findById(hotelId)
+        return roomMapper.toResponseDTO(room);
+    }
+
+    @Override
+    public RoomResponse create(RoomRequest dto) {
+
+        HotelEntity hotel = hotelRepository.findById(dto.getHotelId())
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
 
         RoomEntity room = roomMapper.toEntity(dto);
