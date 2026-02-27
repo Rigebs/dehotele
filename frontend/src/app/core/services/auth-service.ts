@@ -25,6 +25,8 @@ export class AuthService {
 
   constructor() {
     this.restoreSession();
+    console.log(this.isAdmin());
+    console.log(this.currentUser());
   }
 
   login(request: LoginRequest) {
@@ -89,11 +91,13 @@ export class AuthService {
       return;
     }
 
+    const normalizedRole = payload.role.replace(/^ROLE_/, '') as 'USER' | 'ADMIN';
+
     this._currentUser.set({
       id: 0,
       fullName: payload.sub,
       email: payload.sub,
-      role: payload.role as 'USER' | 'ADMIN',
+      role: normalizedRole,
     });
   }
 

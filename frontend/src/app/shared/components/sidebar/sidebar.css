@@ -175,3 +175,49 @@
     transform: scale(1.05); /* En lugar de translateX, un pequeño zoom */
   }
 }
+
+/* Sección de acciones (volver al sitio) */
+.sidebar-actions {
+  padding: 1rem 0;
+  border-top: 1px solid var(--sb-border);
+  margin-bottom: 0.5rem;
+}
+
+.back-to-site {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  color: #60a5fa; /* Un color un poco distinto para diferenciarlo */
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.back-to-site:hover {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: var(--sb-text-bright);
+  transform: translateX(4px);
+}
+
+/* Ajuste para el modo colapsado (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .back-to-site {
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+  }
+
+  .sidebar .sidebar-actions span {
+    display: none;
+  }
+}
