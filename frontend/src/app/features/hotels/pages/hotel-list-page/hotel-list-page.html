@@ -1,80 +1,81 @@
-<app-hero (search)="onSearch($event)"></app-hero>
+<app-hero (search)="onSearch($event)" />
 
 <section class="hotels">
-
-    <!-- 🔥 CONTENEDOR REQUERIDO PARA formControlName -->
     <div [formGroup]="filtersForm">
-
         <div class="section-header">
             <h2>Available Hotels</h2>
 
             <app-select formControlName="sort" [options]="[
-          { label: 'Price (Low to High)', value: 'price-low' },
-          { label: 'Price (High to Low)', value: 'price-high' },
-          { label: 'Best Rated', value: 'rating' }
-        ]" placeholder="Sort by">
-            </app-select>
+          { label: 'Name (A-Z)', value: 'name,asc' },
+          { label: 'Price (Low to High)', value: 'price,asc' },
+          { label: 'Price (High to Low)', value: 'price,desc' },
+          { label: 'Best Rated', value: 'rating,desc' }
+        ]" placeholder="Sort by" />
         </div>
 
         <div class="filters">
-
             <app-select formControlName="rating" [options]="[
           { label: 'All ratings', value: null },
           { label: '4+ stars', value: 4 },
           { label: '3+ stars', value: 3 }
-        ]" placeholder="Rating">
-            </app-select>
+        ]" placeholder="Rating" />
 
             <app-select formControlName="guests" [options]="[
           { label: 'Guests', value: null },
           { label: '1 Guest', value: 1 },
           { label: '2 Guests', value: 2 },
           { label: '3+ Guests', value: 3 }
-        ]" placeholder="Guests">
-            </app-select>
-
+        ]" placeholder="Guests" />
         </div>
-
     </div>
-    <!-- 🔥 FIN formGroup -->
 
+    @if (!loading()) {
     <p class="results-count">
-        {{ sortedHotels().length }} hotels found
+        {{ totalElements() }} hotels found
     </p>
+    }
 
-    @if (sortedHotels().length === 0) {
+    @if (loading()) {
+    <div class="hotel-grid">
+        @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="skeleton-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+                <div class="skeleton-line title"></div>
+                <div class="skeleton-line detail"></div>
+                <div class="skeleton-line button"></div>
+            </div>
+        </div>
+        }
+    </div>
+    } @else {
+    @if (hotels().length === 0) {
     <div class="empty-state">
         <h3>No hotels found 😢</h3>
         <p>Try adjusting your filters.</p>
     </div>
-    }
-
-    @if (sortedHotels().length > 0) {
-
+    } @else {
     <div class="hotel-grid">
-
-        @for (hotel of paginatedHotels(); track hotel.id) {
-        <app-hotel-card [hotel]="hotel"></app-hotel-card>
+        @for (hotel of hotels(); track hotel.id) {
+        <app-hotel-card [hotel]="hotel" (click)="goToDetails(hotel.id)" />
         }
-
     </div>
 
+    @if (totalPages() > 1) {
     <div class="pagination">
-
-        <button (click)="previousPage()" [disabled]="isFirstPage()">
+        <button (click)="handlePageChange(-1)" [disabled]="currentPage() === 0">
             Previous
         </button>
 
         <span>
-            Page {{ page() + 1 }} / {{ totalPages() }}
+            Page {{ currentPage() + 1 }} / {{ totalPages() }}
         </span>
 
-        <button (click)="nextPage()" [disabled]="isLastPage()">
+        <button (click)="handlePageChange(1)" [disabled]="currentPage() + 1 >= totalPages()">
             Next
         </button>
-
     </div>
-
     }
-
+    }
+    }
 </section>

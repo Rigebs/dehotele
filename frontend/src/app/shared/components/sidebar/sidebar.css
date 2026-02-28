@@ -31,29 +31,86 @@
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  padding: 0.5rem;
 }
 
+/* Icono Principal de Admin */
 .logo-icon {
+  position: relative;
   flex-shrink: 0;
-  background: linear-gradient(135deg, var(--sb-accent), #2563eb);
-  width: 40px;
-  height: 40px;
+  /* Gradiente profesional usando tu color primario */
+  background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  font-size: 1.2rem;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 16px rgba(30, 58, 138, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo-letter {
+  color: white;
+  font-weight: 800;
+  font-size: 1.4rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Punto de estado (opcional, da toque de 'Dashboard') */
+.status-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background: #10b981; /* Verde esmeralda para 'Online' */
+  border: 2px solid var(--bg-color); /* O el color de fondo de tu sidebar */
+  border-radius: 50%;
+}
+
+/* Texto y Badge */
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
 }
 
 .logo-text h2 {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin: 0;
   letter-spacing: -0.5px;
-  color: white;
+  color: white; /* O var(--primary-color) si tu sidebar es claro */
+}
+
+/* Contenedor del Badge de Admin */
+.admin-badge-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.admin-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent-color); /* Tu dorado/naranja de mistyles.css */
+  text-transform: uppercase;
+}
+
+.icon-admin {
+  width: 10px;
+  height: 10px;
+  color: var(--accent-color);
+}
+
+/* Efecto hover suave para el contenedor */
+.logo-container:hover .logo-icon {
+  transform: rotate(-3deg) scale(1.05);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .admin-badge {
@@ -137,42 +194,96 @@
   }
 }
 
+/* ===================== AJUSTES PARA MODO COLAPSADO (TABLETS) ===================== */
+
 @media (min-width: 769px) and (max-width: 1024px) {
+  :host {
+    --sidebar-width: 85px; /* Definimos un ancho fijo para el modo colapsado */
+  }
+
   .sidebar {
-    width: 80px;
-    padding: 2rem 0.75rem; /* Padding lateral pequeño para que el hover no toque el borde */
+    width: var(--sidebar-width);
+    padding: 2rem 0.5rem; /* Reducimos padding lateral */
     align-items: center;
   }
 
+  /* Centrar Logo */
   .logo-container {
+    padding: 0;
     justify-content: center;
     width: 100%;
-    gap: 0;
   }
 
-  .sidebar .logo-text,
-  .sidebar span,
-  .sidebar .nav-separator,
-  .sidebar .version-tag {
-    display: none;
+  /* Ocultar textos de forma limpia */
+  .logo-text,
+  .sidebar-nav span,
+  .nav-separator,
+  .version-tag,
+  .back-to-site span {
+    display: none !important; /* Forzamos la desaparición */
   }
 
+  /* Ajuste de la navegación */
   .sidebar-nav {
     width: 100%;
     align-items: center;
+    gap: 0.8rem;
   }
 
-  .sidebar-nav a {
+  .sidebar-nav a,
+  .back-to-site {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    display: flex;
     justify-content: center;
-    padding: 0.85rem 0;
-    width: 48px; /* Tamaño fijo para que sea un cuadrado perfecto o círculo */
-    height: 48px;
-    border-radius: 12px; /* Mantenemos el redondeo */
-    gap: 0;
+    align-items: center;
+    border-radius: 12px;
+    margin: 0 auto;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .sidebar-nav a:hover {
-    transform: scale(1.05); /* En lugar de translateX, un pequeño zoom */
+  /* Separador visual en modo colapsado (una línea simple) */
+  .nav-separator {
+    display: block !important;
+    height: 1px;
+    width: 30px;
+    background: var(--sb-border);
+    margin: 1rem auto;
+    text-indent: -9999px; /* Escondemos el texto "Gestión" pero dejamos la línea */
+  }
+
+  /* Hover en modo iconos */
+  .sidebar-nav a:hover,
+  .back-to-site:hover {
+    transform: scale(1.1) !important; /* Zoom en lugar de desplazamiento lateral */
+    background-color: var(--sb-accent);
+    color: white;
+  }
+
+  /* Tooltip simple (Opcional: mejora la UX) */
+  .sidebar-nav a {
+    position: relative;
+  }
+
+  /* Ajuste del Footer y Acciones */
+  .sidebar-actions,
+  .sidebar-footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--sb-border);
+    padding: 1.5rem 0;
+  }
+
+  .version-tag {
+    display: none;
+  }
+
+  /* La D del logo se mantiene grande y centrada */
+  .logo-icon {
+    width: 48px;
+    height: 48px;
   }
 }
 

@@ -1,45 +1,128 @@
 .hotel-card {
   position: relative;
-  background: #fff;
-  border-radius: 14px;
+  background-color: var(--bg-color);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  transition: 0.3s ease;
+  box-shadow: 0 4px 15px var(--shadow-color);
+  transition: var(--transition);
   display: flex;
   flex-direction: column;
+  height: 100%;
+  border: 1px solid #f1f5f9;
 }
 
 .hotel-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
 }
 
-.hotel-card img {
+/* Contenedor de Imagen */
+.image-container {
   width: 100%;
   height: 200px;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: 0.4s ease;
+  transition: transform 0.5s ease;
 }
 
-.hotel-card:hover img {
-  transform: scale(1.05);
+.hotel-card:hover .image-container img {
+  transform: scale(1.1);
 }
 
+/* Badges */
 .top-badge {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: #ff9800;
+  z-index: 10;
+  background: var(--accent-color);
   color: white;
-  font-size: 0.7rem;
-  padding: 0.4rem 0.6rem;
-  border-radius: 20px;
+  font-size: 0.75rem;
   font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Info Section */
 .hotel-info {
-  padding: 1.2rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  flex-grow: 1;
+}
+
+.header-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.header-group h3 {
+  font-size: 1.15rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.rating-badge {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 0.75rem;
+}
+
+.address {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reviews-text {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-bottom: 1.25rem;
+}
+
+/* Iconos */
+.icon-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.icon-star {
+  width: 14px;
+  height: 14px;
+  color: var(--accent-color);
+}
+
+/* Botón Ajustado */
+.full-width {
+  width: 100%;
+  margin-top: auto;
+  padding: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }

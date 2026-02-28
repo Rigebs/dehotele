@@ -1,31 +1,23 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-export interface Hotel {
-  id: number;
-  name: string;
-  city: string;
-  address: string;
-  rating: number;
-  reviewsCount: number;
-  price: number;
-  imageUrl: string;
-}
+import { Hotel } from '../../../../core/models/hotel.model';
 
 @Component({
   selector: 'app-hotel-card',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './hotel-card.html',
-  styleUrls: ['./hotel-card.css'],
+  styleUrl: './hotel-card.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HotelCard {
-  @Input({ required: true }) hotel!: Hotel;
+  private readonly router = inject(Router);
 
-  constructor(private router: Router) {}
+  // Usamos signals para las entradas
+  hotel = input.required<Hotel>();
 
-  goToDetails() {
-    this.router.navigate(['/hotels', this.hotel.id]);
+  goToDetails(): void {
+    this.router.navigate(['/hotels', this.hotel().id]);
   }
 }
