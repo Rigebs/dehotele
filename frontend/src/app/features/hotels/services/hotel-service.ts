@@ -47,6 +47,27 @@ export class HotelService {
     return this.http.get<PageResponse<Hotel>>(this.apiUrl, { params });
   }
 
+  getAvailableHotels(
+    city: string,
+    capacity: number,
+    checkIn: string,
+    checkOut: string,
+    page: number = 0,
+    size: number = 10,
+    sort: string = 'name,asc',
+  ) {
+    const params = new HttpParams()
+      .set('city', city)
+      .set('capacity', capacity.toString())
+      .set('checkIn', checkIn)
+      .set('checkOut', checkOut)
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', sort);
+
+    return this.http.get<PageResponse<Hotel>>(`${this.apiUrl}/available`, { params });
+  }
+
   getAllLightweight() {
     return this.http.get<readonly Hotel[]>(`${this.apiUrl}/lightweight`);
   }

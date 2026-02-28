@@ -35,6 +35,20 @@ export class HotelListPage implements OnInit {
   readonly currentPage = signal(0);
   readonly perPage = signal(6);
   readonly searchCity = signal<string | undefined>(undefined);
+  readonly capacity = signal<number | undefined>(undefined);
+  readonly checkIn = signal<string | undefined>(undefined);
+  readonly checkOut = signal<string | undefined>(undefined);
+
+  readonly isAvailabilitySearch = computed(
+    () => !!(this.searchCity() && this.capacity() && this.checkIn() && this.checkOut()),
+  );
+
+  readonly searchSummary = computed(() => {
+    if (this.isAvailabilitySearch()) {
+      return `Results for ${this.capacity()} guests from ${this.checkIn()} to ${this.checkOut()}`;
+    }
+    return this.searchCity() ? `Showing hotels in ${this.searchCity()}` : 'All hotels';
+  });
 
   readonly filtersForm = this.fb.group({
     sort: ['name,asc'],
@@ -54,18 +68,51 @@ export class HotelListPage implements OnInit {
     });
   }
 
+  // En tu clase HotelListPage
+  clearSearch(): void {
+    // Reseteamos los signals de búsqueda
+    this.searchCity.set(undefined);
+    this.capacity.set(undefined);
+    this.checkIn.set(undefined);
+    this.checkOut.set(undefined);
+
+    // Reseteamos también el formulario de filtros si lo deseas
+    this.filtersForm.patchValue(
+      {
+        sort: 'name,asc',
+        rating: null,
+        guests: null,
+      },
+      { emitEvent: false },
+    ); // Evitamos doble disparo si quieres control manual
+
+    // Cargamos desde la página 0
+    this.loadHotels(0);
+  }
+
   loadHotels(page: number = 0): void {
     this.loading.set(true);
     this.currentPage.set(page);
 
-    const filters: HotelFilter = {
-      city: this.searchCity(),
-      minRating: this.filtersForm.value.rating ?? undefined,
-    };
-
+    const city = this.searchCity();
+    const cap = this.capacity();
+    const start = this.checkIn();
+    const end = this.checkOut();
     const sort = this.filtersForm.value.sort ?? 'name,asc';
+    const size = this.perPage();
 
-    this.hotelService.getHotels(page, filters, sort, this.perPage()).subscribe({
+    // Definimos el Observable dinámicamente
+    const hotels$ =
+      city && cap && start && end
+        ? this.hotelService.getAvailableHotels(city, cap, start, end, page, size, sort)
+        : this.hotelService.getHotels(
+            page,
+            { city, minRating: this.filtersForm.value.rating ?? undefined },
+            sort,
+            size,
+          );
+
+    hotels$.subscribe({
       next: (res) => {
         this.hotels.set(res.content);
         this.totalElements.set(res.totalElements);
@@ -76,12 +123,23 @@ export class HotelListPage implements OnInit {
       error: (err) => {
         console.error('Error loading hotels', err);
         this.loading.set(false);
+        this.hotels.set([]);
       },
     });
   }
 
-  onSearch(value: { city: string }): void {
+  // Update the signature to accept 'null' for the optional fields
+  onSearch(value: {
+    city: string;
+    guests?: number | null;
+    checkIn?: string | null;
+    checkOut?: string | null;
+  }): void {
     this.searchCity.set(value.city);
+    this.capacity.set(value.guests ?? undefined);
+    this.checkIn.set(value.checkIn ?? undefined);
+    this.checkOut.set(value.checkOut ?? undefined);
+
     this.loadHotels(0);
   }
 
@@ -93,6 +151,26 @@ export class HotelListPage implements OnInit {
   }
 
   goToDetails(hotelId: number): void {
-    this.router.navigate(['/hotels', hotelId]);
+    console.log(hotelId);
+
+    const queryParams: any = {};
+
+    if (this.checkIn()) {
+      queryParams.checkIn = this.checkIn();
+    }
+
+    if (this.checkOut()) {
+      queryParams.checkOut = this.checkOut();
+    }
+
+    if (this.capacity()) {
+      queryParams.guests = this.capacity();
+    }
+
+    console.log('holaa');
+
+    console.log(queryParams);
+
+    this.router.navigate(['/hotels', hotelId], { queryParams });
   }
 }

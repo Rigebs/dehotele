@@ -15,7 +15,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('./features/hotels/hotel.routes').then((m) => m.HOTELS_ROUTES),
+        loadChildren: () => import('./features/hotels/hotels.routes').then((m) => m.HOTELS_ROUTES),
       },
       {
         path: 'reservations',

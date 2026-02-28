@@ -11,7 +11,7 @@ export const HOTELS_ROUTES: Routes = [
 
   // Detalles de hotel (dinámica)
   {
-    path: ':id',
+    path: 'hotels/:id',
     loadComponent: () =>
       import('./pages/hotel-details-page/hotel-details-page').then((m) => m.HotelDetailsPage),
   },

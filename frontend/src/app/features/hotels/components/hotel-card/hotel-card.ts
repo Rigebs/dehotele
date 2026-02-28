@@ -1,6 +1,5 @@
-import { Component, input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, inject, ChangeDetectionStrategy, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { Hotel } from '../../../../core/models/hotel.model';
 
 @Component({
@@ -12,12 +11,11 @@ import { Hotel } from '../../../../core/models/hotel.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HotelCard {
-  private readonly router = inject(Router);
-
-  // Usamos signals para las entradas
   hotel = input.required<Hotel>();
 
-  goToDetails(): void {
-    this.router.navigate(['/hotels', this.hotel().id]);
+  viewDetails = output<number>();
+
+  onCardClick(): void {
+    this.viewDetails.emit(this.hotel().id);
   }
 }

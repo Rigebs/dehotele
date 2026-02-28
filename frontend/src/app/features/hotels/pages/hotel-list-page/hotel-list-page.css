@@ -327,3 +327,118 @@
     transform: translateY(0);
   }
 }
+
+.search-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #6366f1; /* Indigo para búsqueda general */
+  margin-bottom: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-status-banner.availability-mode {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  border-left-color: #22c55e; /* Verde para disponibilidad */
+}
+
+.status-icon {
+  color: #6366f1;
+  display: flex;
+  align-items: center;
+}
+
+.availability-mode .status-icon {
+  color: #22c55e;
+}
+
+/* Contenedor flexible para texto y acciones */
+.status-content {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.status-text h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1f2937;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.status-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.status-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mode-badge {
+  background: #22c55e;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Botón de Limpieza */
+.btn-clear {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: 0.2s;
+}
+
+.btn-clear:hover {
+  background: #fecaca;
+  transform: translateY(-1px);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 640px) {
+  .search-status-banner {
+    flex-direction: row; /* Mantenemos icono a la izquierda */
+    padding: 1rem;
+  }
+
+  .status-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .status-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .status-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}

@@ -80,8 +80,14 @@ export class DatePicker implements ControlValueAccessor {
   private onTouched: () => void = () => {};
 
   writeValue(value: string | null): void {
-    if (value) {
-      const date = new Date(value);
+    if (value && typeof value === 'string') {
+      // value viene como "YYYY-MM-DD"
+      const [year, month, day] = value.split('-').map(Number);
+
+      // Creamos la fecha usando el constructor de números (esto siempre es LOCAL)
+      // El mes es 0-indexado en JS, por eso restamos 1
+      const date = new Date(year, month - 1, day);
+
       this.selectedDate.set(date);
       this.currentMonth.set(date);
     } else {

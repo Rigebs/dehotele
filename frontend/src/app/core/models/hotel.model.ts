@@ -1,3 +1,5 @@
+import { Room } from './room.model';
+
 export interface Hotel {
   id: number;
   name: string;
@@ -8,6 +10,7 @@ export interface Hotel {
   rating: number;
   reviewsCount: number;
   amenities: string[];
+  rooms: Room[];
 }
 
 export interface PageResponse<T> {
