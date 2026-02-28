@@ -18,6 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
 
@@ -65,6 +67,7 @@ public class HotelEntity extends BaseEntity {
     private Integer reviewsCount;
 
     @ElementCollection
+    @Fetch(FetchMode.SUBSELECT) // Añadir esto
     @CollectionTable(
             name = "hotel_amenities",
             joinColumns = @JoinColumn(name = "hotel_id")
@@ -78,5 +81,6 @@ public class HotelEntity extends BaseEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Fetch(FetchMode.SUBSELECT)
     private List<RoomEntity> rooms;
 }

@@ -10,7 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/hotels")
@@ -27,5 +30,22 @@ public class HotelController {
     @GetMapping("/{id}")
     public HotelResponse getById(@PathVariable Long id) {
         return hotelService.findById(id);
+    }
+
+    @GetMapping("/available")
+    public Page<HotelResponse> getAvailableHotels(@RequestParam String city,
+                                                  @RequestParam Integer capacity,
+                                                  @RequestParam LocalDate checkIn,
+                                                  @RequestParam LocalDate checkOut,
+                                                  Pageable pageable) {
+        return hotelService.findAvailableHotels(city, capacity, checkIn, checkOut, pageable);
+    }
+
+    @GetMapping("/{id}/availability")
+    public HotelResponse getHotelWithAvailability(@PathVariable Long id,
+                                                  @RequestParam Integer capacity,
+                                                  @RequestParam LocalDate checkIn,
+                                                  @RequestParam LocalDate checkOut) {
+        return hotelService.findHotelWithAvailableRooms(id, capacity, checkIn, checkOut);
     }
 }

@@ -5,7 +5,7 @@ import com.rige.dto.response.HotelResponse;
 import com.rige.entities.HotelEntity;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {RoomMapper.class})
 public interface HotelMapper {
 
     HotelEntity toEntity(HotelRequest dto);
