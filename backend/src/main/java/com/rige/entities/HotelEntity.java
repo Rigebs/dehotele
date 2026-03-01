@@ -67,7 +67,7 @@ public class HotelEntity extends BaseEntity {
     private Integer reviewsCount;
 
     @ElementCollection
-    @Fetch(FetchMode.SUBSELECT) // Añadir esto
+    @Fetch(FetchMode.SUBSELECT)
     @CollectionTable(
             name = "hotel_amenities",
             joinColumns = @JoinColumn(name = "hotel_id")
@@ -83,4 +83,16 @@ public class HotelEntity extends BaseEntity {
     )
     @Fetch(FetchMode.SUBSELECT)
     private List<RoomEntity> rooms;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewEntity> reviews;
+
+    public void updateRating(Integer newReviewRating) {
+        if (this.rating == null) this.rating = 0.0;
+        if (this.reviewsCount == null) this.reviewsCount = 0;
+
+        double totalPoints = (this.rating * this.reviewsCount) + newReviewRating;
+        this.reviewsCount++;
+        this.rating = totalPoints / this.reviewsCount;
+    }
 }
