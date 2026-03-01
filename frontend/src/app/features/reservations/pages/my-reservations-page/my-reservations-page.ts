@@ -1,61 +1,48 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
-import { ReservationResponse } from '../../../../core/models/reservation.model';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ReservationService } from '../../services/reservation-service';
+import { AuthService } from '../../../../core/services/auth-service';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop'; // Importar toObservable
+import { filter, switchMap, map } from 'rxjs'; // Importar map
+import { DatePipe } from '@angular/common';
+import { ToastService } from '../../../../core/services/toast-service';
 
 @Component({
   selector: 'app-my-reservations-page',
-  imports: [],
+  standalone: true, // Asegúrate de tener esto si usas imports
+  imports: [DatePipe],
   templateUrl: './my-reservations-page.html',
   styleUrl: './my-reservations-page.css',
 })
 export class MyReservationsPage {
-  private readonly reservationsService = inject(ReservationService);
+  private readonly reservationService = inject(ReservationService);
+  private readonly authService = inject(AuthService);
+  private readonly toast = inject(ToastService);
 
-  private readonly _reservations = signal<readonly ReservationResponse[]>([]);
-  private readonly _isLoading = signal(true);
-  private readonly _page = signal(0);
-  private readonly _totalPages = signal(0);
+  private readonly refreshTrigger = signal<number>(0);
+  readonly userId = computed(() => this.authService.currentUser()?.id);
 
-  readonly reservations = computed(() => this._reservations());
-  readonly isLoading = computed(() => this._isLoading());
-  readonly page = computed(() => this._page());
-  readonly totalPages = computed(() => this._totalPages());
+  // Convertimos el estado (userId + refreshTrigger) en un Observable para usar operators
+  readonly reservations = toSignal(
+    toObservable(computed(() => ({ id: this.userId(), refresh: this.refreshTrigger() }))).pipe(
+      filter((data) => !!data.id),
+      switchMap((data) => this.reservationService.getReservationsByUserId(data.id!)),
+      // Aseguramos que siempre devuelva un array para evitar errores de .length en el HTML
+      map((res) => res || []),
+    ),
+    { initialValue: [] }, // Valor inicial vacío para que .length exista desde el inicio
+  );
 
-  constructor() {
-    effect(() => {
-      this.loadReservations(this._page());
-    });
-  }
+  readonly isLoading = computed(() => this.reservations() === undefined);
 
-  private loadReservations(page: number): void {
-    this._isLoading.set(true);
-
-    this.reservationsService.getMyReservations(page).subscribe({
-      next: (response) => {
-        this._reservations.set(response.content);
-        this._totalPages.set(response.totalPages);
-        this._isLoading.set(false);
-      },
-      error: () => {
-        this._isLoading.set(false);
-      },
-    });
-  }
-
-  cancel(id: number): void {
-    this.reservationsService.cancelReservation(id).subscribe({
-      next: () => {
-        // Recargar lista
-        this.loadReservations(this._page());
-      },
-    });
-  }
-
-  nextPage(): void {
-    this._page.update((p) => p + 1);
-  }
-
-  previousPage(): void {
-    this._page.update((p) => p - 1);
+  onCancel(id: number) {
+    if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
+      this.reservationService.cancelReservation(id).subscribe({
+        next: () => {
+          this.toast.show({ type: 'success', message: 'Reserva cancelada correctamente' });
+          this.refreshTrigger.update((v) => v + 1);
+        },
+        error: () => this.toast.show({ type: 'error', message: 'No se pudo cancelar la reserva' }),
+      });
+    }
   }
 }

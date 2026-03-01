@@ -9,18 +9,17 @@ import { PageResponse } from '../../../core/models/hotel.model';
 })
 export class ReservationService {
   private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${environment.apiUrl}/reservations`;
 
   createReservation(request: ReservationRequest) {
-    return this.http.post<ReservationResponse>(`${environment.apiUrl}/reservations`, request);
+    return this.http.post<ReservationResponse>(this.apiUrl, request);
   }
 
-  getMyReservations(page = 0, size = 10) {
-    return this.http.get<PageResponse<ReservationResponse>>(`${environment.apiUrl}/reservations`, {
-      params: { page, size },
-    });
+  getReservationsByUserId(userId: number) {
+    return this.http.get<ReservationResponse[]>(`${this.apiUrl}/user/${userId}`);
   }
 
   cancelReservation(id: number) {
-    return this.http.patch<void>(`${environment.apiUrl}/reservations/${id}/cancel`, {});
+    return this.http.patch<void>(`${this.apiUrl}/${id}/cancel`, {});
   }
 }

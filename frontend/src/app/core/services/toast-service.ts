@@ -5,18 +5,21 @@ export interface ToastMessage {
   readonly message: string;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ToastService {
   readonly toast = signal<ToastMessage | null>(null);
 
   show(message: ToastMessage) {
     this.toast.set(message);
+    setTimeout(() => this.toast.set(null), 3000);
+  }
 
-    setTimeout(() => {
-      this.toast.set(null);
-    }, 3000);
+  showSuccess(message: string) {
+    this.show({ type: 'success', message });
+  }
+
+  showError(message: string) {
+    this.show({ type: 'error', message });
   }
 
   clear() {

@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HotelService } from '../../services/hotel-service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { combineLatest, switchMap } from 'rxjs';
 import { DatePicker } from '../../../../shared/ui/date-picker/date-picker';
 
 @Component({
@@ -19,17 +19,26 @@ export class HotelDetailsPage {
   private readonly fb = inject(FormBuilder);
   private readonly hotelService = inject(HotelService);
 
+  private readonly router = inject(Router);
+
   readonly today = new Date();
 
   readonly guests = signal<number>(1);
 
   readonly hotel = toSignal(
-    this.route.paramMap.pipe(
-      switchMap((params) => {
+    combineLatest([this.route.paramMap, this.route.queryParamMap]).pipe(
+      switchMap(([params, queryParams]) => {
         const id = Number(params.get('id'));
-        return this.hotelService.getHotelById(id);
+
+        // Extraemos los query params de la URL
+        const capacity = Number(queryParams.get('guests')) || 1; // Usamos 'guests' según tu URL
+        const checkIn = queryParams.get('checkIn') ?? '';
+        const checkOut = queryParams.get('checkOut') ?? '';
+
+        return this.hotelService.getHotelAvailable(id, capacity, checkIn, checkOut);
       }),
     ),
+    { initialValue: null },
   );
 
   readonly minCheckOut = computed(() => {
@@ -62,13 +71,21 @@ export class HotelDetailsPage {
         });
       }
     });
-    const checkIn = this.route.snapshot.queryParamMap.get('checkIn');
-    const checkOut = this.route.snapshot.queryParamMap.get('checkOut');
   }
 
   reserve(roomId: number) {
     if (this.reservationForm.invalid) return;
+
     const { checkInDate, checkOutDate } = this.reservationForm.getRawValue();
-    alert(`Habitación ${roomId} reservada del ${checkInDate} al ${checkOutDate}`);
+
+    this.router.navigate(['/reservations/create'], {
+      queryParams: {
+        hotelId: this.hotel()?.id,
+        roomId: roomId,
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        guests: this.guests(),
+      },
+    });
   }
 }

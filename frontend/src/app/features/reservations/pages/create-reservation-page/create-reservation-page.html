@@ -1,1 +1,62 @@
-<p>create-reservation-page works!</p>
+<div class="container reservation-container">
+    @if (hotel(); as hotelData) {
+    <header class="page-header">
+        <h1>Confirmar Reservación</h1>
+        <p class="subtitle">Verifica los detalles de tu estancia en <strong>{{ hotelData.name }}</strong></p>
+    </header>
+
+    <div class="reservation-grid">
+        <main class="form-section">
+            <section class="card-form">
+                <h3><i class="icon-info"></i> Detalles del Huésped</h3>
+                <p>La reserva se realizará a nombre del usuario titular de la cuenta.</p>
+                <div class="user-info-badge">
+                    <strong>Usuario:</strong> {{ authService.currentUser()?.email }}
+                </div>
+            </section>
+
+            <div class="actions">
+                <button type="button" class="btn-flat" (click)="location.back()">Regresar</button>
+                <button type="button" class="btn-primary" (click)="onSubmit()">
+                    Confirmar Reserva
+                </button>
+            </div>
+        </main>
+
+        <aside class="summary-section">
+            <div class="sticky-summary">
+                <div class="summary-card">
+                    <h4>Resumen de Reserva</h4>
+                    <div class="summary-item">
+                        <span class="label">Check-in:</span>
+                        <span class="value">{{ checkIn() | date:'dd MMM yyyy' }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Check-out:</span>
+                        <span class="value">{{ checkOut() | date:'dd MMM yyyy' }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Noches:</span>
+                        <span class="value">{{ nights() }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Habitación:</span>
+                        <span class="value">{{ selectedRoom()?.name }}</span>
+                    </div>
+                    <div class="summary-item price-per-night">
+                        <span class="label">Precio por noche:</span>
+                        <span class="value">${{ selectedRoom()?.pricePerNight }}</span>
+                    </div>
+                    <hr>
+                    <div class="total-row">
+                        <span>Total estimado</span>
+                        <span class="price-total">${{ totalAmount() }}</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+    } @else {
+    <div class="loading">Cargando detalles...</div>
+    }
+</div>

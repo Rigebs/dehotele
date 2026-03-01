@@ -94,14 +94,16 @@ export class AuthService {
     const normalizedRole = payload.role.replace(/^ROLE_/, '') as 'USER' | 'ADMIN';
 
     this._currentUser.set({
-      id: 0,
-      fullName: payload.sub,
+      id: payload.id,
+      fullName: payload.fullName,
       email: payload.sub,
       role: normalizedRole,
     });
   }
 
-  private decodeToken(token: string): { sub: string; role: string } | null {
+  private decodeToken(
+    token: string,
+  ): { id: number; fullName: string; sub: string; role: string } | null {
     try {
       return JSON.parse(atob(token.split('.')[1]));
     } catch {

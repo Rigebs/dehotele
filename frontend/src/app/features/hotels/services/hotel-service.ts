@@ -76,6 +76,15 @@ export class HotelService {
     return this.http.get<Hotel>(`${this.apiUrl}/${id}`);
   }
 
+  getHotelAvailable(id: number, capacity: number, checkIn: string, checkOut: string) {
+    const params = new HttpParams()
+      .set('capacity', capacity.toString())
+      .set('checkIn', checkIn)
+      .set('checkOut', checkOut);
+
+    return this.http.get<Hotel>(`${this.apiUrl}/${id}/availability`, { params });
+  }
+
   getRoomsByHotel(id: number) {
     return this.http.get<readonly Room[]>(`${this.apiUrl}/${id}/rooms`);
   }
