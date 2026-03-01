@@ -1,18 +1,17 @@
 package com.rige.security;
 
+import com.rige.entities.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -28,18 +27,14 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Usaremos este único método para generar Access Tokens
-    public String generateAccessToken(UserDetails userDetails) {
-        // Extraemos los roles para que se guarden correctamente en el claim
-        String roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
+    public String generateAccessToken(UserEntity user) {
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .claim("role", roles)
+                .setSubject(user.getUsername())
+                .claim("id", user.getId())
+                .claim("fullName", user.getFullName())
+                .claim("role", user.getRole())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + accessExpiration)) // Aquí usa tus 10000ms
+                .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
