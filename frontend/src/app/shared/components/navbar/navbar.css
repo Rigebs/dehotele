@@ -217,3 +217,49 @@
     display: none;
   }
 }
+
+/* Agrega esto a tu navbar.css existente */
+
+.user-profile-link {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition);
+}
+
+.user-profile-link:hover .user-profile {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem;
+  border-radius: 30px;
+  background: #f3f4f6;
+  transition: var(--transition);
+}
+
+/* Para asegurar que el nombre no rompa el diseño si es muy largo */
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding-right: 0.5rem;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}

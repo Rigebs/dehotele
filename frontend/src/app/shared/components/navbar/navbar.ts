@@ -13,8 +13,9 @@ export class Navbar {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  readonly isAuthenticated = computed(() => this.authService.isAuthenticated());
-  readonly isAdmin = computed(() => this.authService.isAdmin());
+  readonly isAuthenticated = this.authService.isAuthenticated;
+  readonly isAdmin = this.authService.isAdmin;
+  readonly user = this.authService.currentUser;
 
   logout(): void {
     this.authService.logout();

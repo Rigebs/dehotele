@@ -60,6 +60,10 @@ export class AuthService {
     this.tokenStorage.clear();
   }
 
+  updateUserManually(user: User): void {
+    this._currentUser.set(user);
+  }
+
   private setSession(response: AuthResponse): void {
     this._accessToken.set(response.accessToken);
     this._refreshToken.set(response.refreshToken);
