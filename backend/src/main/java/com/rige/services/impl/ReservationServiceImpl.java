@@ -12,7 +12,7 @@ import com.rige.filters.ReservationFilter;
 import com.rige.mappers.ReservationMapper;
 import com.rige.repositories.ReservationRepository;
 import com.rige.repositories.RoomRepository;
-import com.rige.repositories.UserRepository;
+import com.rige.services.EmailService;
 import com.rige.services.ReservationService;
 import com.rige.specifications.ReservationSpecification;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +35,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
-    private final UserRepository userRepository;
     private final ReservationMapper reservationMapper;
+    private final EmailService emailService;
 
     @Override
     public ReservationResponse create(ReservationRequest dto) {
@@ -93,9 +93,11 @@ public class ReservationServiceImpl implements ReservationService {
                 .status(ReservationStatus.CREATED)
                 .build();
 
-        return reservationMapper.toResponseDTO(
-                reservationRepository.save(reservation)
-        );
+        ReservationEntity savedReservation = reservationRepository.save(reservation);
+
+        emailService.sendReservationConfirmation(savedReservation);
+
+        return reservationMapper.toResponseDTO(savedReservation);
     }
 
     @Override
@@ -133,6 +135,8 @@ public class ReservationServiceImpl implements ReservationService {
         if (reservation.getStatus() == ReservationStatus.CANCELLED) {
             throw new BadRequestException("Reservation already cancelled");
         }
+
+        emailService.sendReservationCancellation(reservation);
 
         reservation.setStatus(ReservationStatus.CANCELLED);
     }

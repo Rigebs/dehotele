@@ -25,8 +25,6 @@ export class AuthService {
 
   constructor() {
     this.restoreSession();
-    console.log(this.isAdmin());
-    console.log(this.currentUser());
   }
 
   login(request: LoginRequest) {

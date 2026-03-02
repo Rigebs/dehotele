@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,19 +44,21 @@ public class HotelController {
     }
 
     @GetMapping("/available")
-    public Page<HotelResponse> getAvailableHotels(@RequestParam String city,
-                                                  @RequestParam Integer capacity,
-                                                  @RequestParam LocalDate checkIn,
-                                                  @RequestParam LocalDate checkOut,
-                                                  Pageable pageable) {
+    public Page<HotelResponse> getAvailableHotels(
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Integer capacity,
+            @RequestParam(required = false) LocalDate checkIn,
+            @RequestParam(required = false) LocalDate checkOut,
+            Pageable pageable) {
         return hotelService.findAvailableHotels(city, capacity, checkIn, checkOut, pageable);
     }
 
     @GetMapping("/{id}/availability")
-    public HotelResponse getHotelWithAvailability(@PathVariable Long id,
-                                                  @RequestParam Integer capacity,
-                                                  @RequestParam LocalDate checkIn,
-                                                  @RequestParam LocalDate checkOut) {
+    public HotelResponse getHotelWithAvailability(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer capacity,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut) {
         return hotelService.findHotelWithAvailableRooms(id, capacity, checkIn, checkOut);
     }
 

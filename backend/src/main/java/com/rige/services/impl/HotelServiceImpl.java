@@ -49,7 +49,8 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<HotelResponse> findAvailableHotels(String city, Integer capacity, LocalDate checkIn, LocalDate checkOut,
+    public Page<HotelResponse> findAvailableHotels(String city, Integer capacity,
+                                                   LocalDate checkIn, LocalDate checkOut,
                                                    Pageable pageable) {
         return hotelRepository.findAvailableHotels(city, capacity, checkIn, checkOut, pageable)
                 .map(hotelMapper::toResponseDTO);
@@ -57,7 +58,8 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     @Transactional(readOnly = true)
-    public HotelResponse findHotelWithAvailableRooms(Long id, Integer capacity, LocalDate checkIn, LocalDate checkOut) {
+    public HotelResponse findHotelWithAvailableRooms(Long id, Integer capacity,
+                                                     LocalDate checkIn, LocalDate checkOut) {
         HotelEntity hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
 

@@ -123,6 +123,54 @@
                 }
             </div>
         </section>
+        <section class="reviews-section">
+            <div class="section-title-group">
+                <h2>Experiencias de huéspedes</h2>
+                <span class="title-divider"></span>
+            </div>
+
+            <div class="add-review-box">
+                <h4>Deja tu opinión</h4>
+                <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+                    <div class="rating-input-container">
+                        <app-select label="Puntuación" [options]="ratingOptions" placeholder="Selecciona una nota"
+                            formControlName="rating">
+                        </app-select>
+                    </div>
+
+                    <textarea formControlName="comment" placeholder="Cuéntanos tu experiencia en este hotel..." rows="3"
+                        class="review-textarea">
+                    </textarea>
+
+                    <button type="submit" class="btn-submit-review"
+                        [disabled]="reviewForm.invalid || isSubmittingReview()">
+                        {{ isSubmittingReview() ? 'Enviando...' : 'Publicar reseña' }}
+                    </button>
+                </form>
+            </div>
+
+            <div class="reviews-grid">
+                @for (review of reviews().content; track review.id) {
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-author">
+                            <div class="author-avatar">{{ review.authorName.charAt(0) }}</div>
+                            <strong>{{ review.authorName }}</strong>
+                        </div>
+                        <div class="review-stars">
+                            @for (s of [1,2,3,4,5]; track s) {
+                            <span [style.color]="s <= review.rating ? '#ffb400' : '#ccc'">★</span>
+                            }
+                        </div>
+                    </div>
+                    <p class="review-comment">{{ review.comment }}</p>
+                    <time class="review-date">{{ review.createdAt | date:'mediumDate' }}</time>
+                </div>
+                } @empty {
+                <p class="no-reviews">Aún no hay reseñas. ¡Sé el primero en compartir tu opinión!</p>
+                }
+            </div>
+        </section>
     </main>
 
     <aside class="hotel-sidebar">

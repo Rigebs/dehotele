@@ -14,9 +14,12 @@ public interface HotelService {
 
     HotelResponse findById(Long id);
 
-    Page<HotelResponse> findAvailableHotels(String city, Integer capacity, LocalDate checkIn, LocalDate checkOut, Pageable pageable);
+    Page<HotelResponse> findAvailableHotels(String city, Integer capacity,
+                                            LocalDate checkIn, LocalDate checkOut,
+                                            Pageable pageable);
 
-    HotelResponse findHotelWithAvailableRooms(Long id, Integer capacity, LocalDate checkIn, LocalDate checkOut);
+    HotelResponse findHotelWithAvailableRooms(Long id, Integer capacity,
+                                              LocalDate checkIn, LocalDate checkOut);
 
     HotelResponse create(HotelRequest dto);
 

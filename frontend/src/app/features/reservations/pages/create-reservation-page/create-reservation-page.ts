@@ -63,7 +63,7 @@ export class CreateReservationPage {
     this.reservationService.createReservation(payload).subscribe({
       next: () => {
         this.toast.show({ type: 'success', message: '¡Reserva realizada con éxito!' });
-        this.router.navigate(['/reservations/my-reservations']);
+        this.router.navigate(['/reservations/my']);
       },
       error: () => this.toast.show({ type: 'error', message: 'Error al procesar la reserva' }),
     });

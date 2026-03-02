@@ -16,13 +16,15 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long>, JpaSpec
   @Query("SELECT r FROM RoomEntity r " +
           "WHERE r.hotel.id = :hotelId " +
           "AND r.active = true " +
-          "AND r.capacity >= :capacity " +
-          "AND NOT EXISTS (" +
-          "    SELECT res FROM ReservationEntity res " +
-          "    WHERE res.room = r " +
-          "    AND res.status <> 'CANCELLED' " +
-          "    AND :checkIn < res.checkOutDate " +
-          "    AND :checkOut > res.checkInDate" +
+          "AND (:capacity IS NULL OR r.capacity >= :capacity) " +
+          "AND (" +
+          "    :checkIn IS NULL OR :checkOut IS NULL OR NOT EXISTS (" +
+          "        SELECT res FROM ReservationEntity res " +
+          "        WHERE res.room = r " +
+          "        AND res.status <> 'CANCELLED' " +
+          "        AND :checkIn < res.checkOutDate " +
+          "        AND :checkOut > res.checkInDate" +
+          "    )" +
           ")")
   List<RoomEntity> findAvailableRoomsByHotel(
           @Param("hotelId") Long hotelId,

@@ -3,7 +3,7 @@ import { authGuard } from '../../core/guards/auth-guard';
 
 export const RESERVATIONS_ROUTES: Routes = [
   {
-    path: 'my-reservations',
+    path: 'my',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/my-reservations-page/my-reservations-page').then((m) => m.MyReservationsPage),
