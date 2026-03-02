@@ -93,6 +93,9 @@ public class HotelEntity extends BaseEntity {
 
         double totalPoints = (this.rating * this.reviewsCount) + newReviewRating;
         this.reviewsCount++;
-        this.rating = totalPoints / this.reviewsCount;
+
+        double rawRating = totalPoints / this.reviewsCount;
+
+        this.rating = Math.round(rawRating * 10.0) / 10.0;
     }
 }

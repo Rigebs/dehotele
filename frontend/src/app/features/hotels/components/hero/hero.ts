@@ -12,14 +12,14 @@ import { DatePicker } from '../../../../shared/ui/date-picker/date-picker';
 import { Select } from '../../../../shared/ui/select/select';
 
 export interface SearchFormValue {
-  city: string;
+  city: string | null;
   guests: number;
   checkIn: string | null;
   checkOut: string | null;
 }
 
 interface SearchFormGroup {
-  city: FormControl<string>;
+  city: FormControl<string | null>;
   guests: FormControl<number>;
   checkIn: FormControl<string | null>;
   checkOut: FormControl<string | null>;
@@ -40,13 +40,13 @@ export class Hero {
   readonly search = output<SearchFormValue>();
 
   readonly form: FormGroup<SearchFormGroup> = this.fb.group({
-    city: this.fb.nonNullable.control('', Validators.required),
+    city: this.fb.control<string | null>(''),
+
     guests: this.fb.nonNullable.control(1, Validators.required),
     checkIn: this.fb.control<string | null>(null),
     checkOut: this.fb.control<string | null>(null),
   });
 
-  // Opciones para tu componente Select
   readonly guestOptions = [
     { label: '1 Guest', value: 1 },
     { label: '2 Guests', value: 2 },

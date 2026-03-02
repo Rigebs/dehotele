@@ -9,11 +9,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Select } from '../../../../shared/ui/select/select';
 import { HotelCard } from '../../components/hotel-card/hotel-card';
 import { Hero } from '../../components/hero/hero';
-import { HotelFilter, HotelService } from '../../services/hotel-service';
+import { HotelService } from '../../services/hotel-service';
 import { Hotel } from '../../../../core/models/hotel.model';
 
 @Component({
@@ -56,10 +55,6 @@ export class HotelListPage implements OnInit {
     guests: [null as number | null],
   });
 
-  private readonly formValues = toSignal(this.filtersForm.valueChanges, {
-    initialValue: this.filtersForm.value,
-  });
-
   ngOnInit(): void {
     this.loadHotels();
 
@@ -68,15 +63,12 @@ export class HotelListPage implements OnInit {
     });
   }
 
-  // En tu clase HotelListPage
   clearSearch(): void {
-    // Reseteamos los signals de búsqueda
     this.searchCity.set(undefined);
     this.capacity.set(undefined);
     this.checkIn.set(undefined);
     this.checkOut.set(undefined);
 
-    // Reseteamos también el formulario de filtros si lo deseas
     this.filtersForm.patchValue(
       {
         sort: 'name,asc',
@@ -84,9 +76,8 @@ export class HotelListPage implements OnInit {
         guests: null,
       },
       { emitEvent: false },
-    ); // Evitamos doble disparo si quieres control manual
+    );
 
-    // Cargamos desde la página 0
     this.loadHotels(0);
   }
 
@@ -101,13 +92,16 @@ export class HotelListPage implements OnInit {
     const sort = this.filtersForm.value.sort ?? 'name,asc';
     const size = this.perPage();
 
-    // Definimos el Observable dinámicamente
     const hotels$ =
       city && cap && start && end
         ? this.hotelService.getAvailableHotels(city, cap, start, end, page, size, sort)
         : this.hotelService.getHotels(
             page,
-            { city, minRating: this.filtersForm.value.rating ?? undefined },
+            {
+              city,
+              capacity: cap,
+              minRating: this.filtersForm.value.rating ?? undefined,
+            },
             sort,
             size,
           );
@@ -128,14 +122,15 @@ export class HotelListPage implements OnInit {
     });
   }
 
-  // Update the signature to accept 'null' for the optional fields
   onSearch(value: {
-    city: string;
+    city: string | null;
     guests?: number | null;
     checkIn?: string | null;
     checkOut?: string | null;
   }): void {
-    this.searchCity.set(value.city);
+    console.log(value);
+
+    this.searchCity.set(value.city ?? undefined);
     this.capacity.set(value.guests ?? undefined);
     this.checkIn.set(value.checkIn ?? undefined);
     this.checkOut.set(value.checkOut ?? undefined);
@@ -151,8 +146,6 @@ export class HotelListPage implements OnInit {
   }
 
   goToDetails(hotelId: number): void {
-    console.log(hotelId);
-
     const queryParams: any = {};
 
     if (this.checkIn()) {
@@ -166,10 +159,6 @@ export class HotelListPage implements OnInit {
     if (this.capacity()) {
       queryParams.guests = this.capacity();
     }
-
-    console.log('holaa');
-
-    console.log(queryParams);
 
     this.router.navigate(['/hotels', hotelId], { queryParams });
   }

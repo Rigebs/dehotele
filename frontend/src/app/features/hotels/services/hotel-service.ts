@@ -7,6 +7,7 @@ import { Room } from '../../../core/models/room.model';
 export interface HotelFilter {
   name?: string;
   city?: string;
+  capacity?: number;
   minRating?: number;
   active?: boolean;
 }
