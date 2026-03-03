@@ -6,27 +6,20 @@
         <p>Discover premium hotels at the best prices around the world.</p>
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="search-box">
-
-            <!-- City -->
             <input type="text" formControlName="city" placeholder="City" class="input" />
 
-            <!-- Guests usando tu componente -->
             <app-select formControlName="guests" [options]="guestOptions" placeholder="Guests">
             </app-select>
 
-            <!-- Check In -->
-            <app-date-picker formControlName="checkIn" placeholder="Check in" [minDate]="today">
+            <app-date-picker formControlName="checkIn" [minDate]="today" placeholder="Check in">
             </app-date-picker>
 
-            <!-- Check Out -->
-            <app-date-picker formControlName="checkOut" placeholder="Check out" [minDate]="checkOutMinDate">
+            <app-date-picker formControlName="checkOut" [minDate]="checkOutMinDate()" placeholder="Check out">
             </app-date-picker>
 
-            <!-- Submit -->
             <app-button type="submit" [disabled]="form.invalid">
                 Search
             </app-button>
-
         </form>
     </div>
 </section>

@@ -12,9 +12,11 @@
                     formControlName="rating">
                 </app-select>
             </div>
+
             <textarea formControlName="comment" placeholder="Cuéntanos tu experiencia..." rows="3"
-                class="review-textarea">
-            </textarea>
+                class="review-textarea"
+                [class.error]="reviewForm.controls.comment.invalid && reviewForm.controls.comment.touched">
+      </textarea>
 
             <button type="submit" class="btn-submit-review" [disabled]="reviewForm.invalid || isSubmittingReview()">
                 {{ isSubmittingReview() ? 'Enviando...' : 'Publicar reseña' }}

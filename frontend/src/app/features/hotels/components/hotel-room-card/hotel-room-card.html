@@ -1,7 +1,8 @@
 <div class="room-card-horizontal">
     <div class="room-details">
-        <h4>{{ room.name }}</h4>
-        <p class="room-capacity">Hasta {{ room.capacity }} personas</p>
+        <h4>{{ room().name }}</h4>
+        <p class="room-capacity">Hasta {{ room().capacity }} personas</p>
+
         <ul class="room-features">
             <li>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -22,12 +23,13 @@
 
     <div class="room-actions">
         <div class="price-tag">
-            <span class="amount">${{ room.pricePerNight }}</span>
+            <span class="amount">${{ room().pricePerNight }}</span>
             <span class="unit">/ noche</span>
         </div>
-        <button (click)="onReserve()" class="btn-reserve" [disabled]="!canReserve" [class.disabled]="!canReserve"
-            [title]="!canReserve ? 'Selecciona fechas de entrada y salida para reservar' : ''">
-            {{ canReserve ? 'Reservar ahora' : 'Selecciona fechas' }}
+
+        <button (click)="onReserve()" class="btn-reserve" [disabled]="!canReserve()"
+            [title]="!canReserve() ? 'Selecciona fechas de entrada y salida para reservar' : ''">
+            {{ canReserve() ? 'Reservar ahora' : 'Selecciona fechas' }}
         </button>
     </div>
 </div>

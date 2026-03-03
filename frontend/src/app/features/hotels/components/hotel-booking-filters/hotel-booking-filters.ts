@@ -1,24 +1,29 @@
-import { Component, EventEmitter, Input, Output, OnInit, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  inject,
+  computed,
+  ChangeDetectionStrategy,
+  input,
+  output,
+  effect,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePicker } from '../../../../shared/ui/date-picker/date-picker';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-hotel-booking-filters',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePicker],
+  imports: [ReactiveFormsModule, DatePicker],
   templateUrl: './hotel-booking-filters.html',
   styleUrl: './hotel-booking-filters.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HotelBookingFilters implements OnInit {
+export class HotelBookingFilters {
   private readonly fb = inject(FormBuilder);
 
-  // Recibimos los valores iniciales para sincronizar con la URL
-  @Input() initialCheckIn = '';
-  @Input() initialCheckOut = '';
-
-  // Evento para avisar al padre que debe navegar o actualizar
-  @Output() filterChange = new EventEmitter<{ checkIn: string; checkOut: string }>();
+  initialCheckIn = input('');
+  initialCheckOut = input('');
+  filterChange = output<{ checkIn: string; checkOut: string }>();
 
   readonly today = new Date();
 
@@ -27,22 +32,23 @@ export class HotelBookingFilters implements OnInit {
     checkOutDate: ['', Validators.required],
   });
 
-  // Lógica de fecha mínima para el Check-out
+  private readonly checkInValue = toSignal(this.reservationForm.controls.checkInDate.valueChanges);
+
   readonly minCheckOut = computed(() => {
-    const checkIn = this.reservationForm.get('checkInDate')?.value;
-    return checkIn ? new Date(checkIn) : new Date();
+    const checkIn = this.checkInValue();
+    return checkIn ? new Date(checkIn) : this.today;
   });
 
-  ngOnInit() {
-    if (this.initialCheckIn || this.initialCheckOut) {
+  constructor() {
+    effect(() => {
       this.reservationForm.patchValue({
-        checkInDate: this.initialCheckIn,
-        checkOutDate: this.initialCheckOut,
+        checkInDate: this.initialCheckIn(),
+        checkOutDate: this.initialCheckOut(),
       });
-    }
+    });
   }
 
-  onSearch() {
+  onSearch(): void {
     if (this.reservationForm.invalid) return;
 
     const { checkInDate, checkOutDate } = this.reservationForm.getRawValue();

@@ -1,18 +1,22 @@
-import { Component, input, inject, ChangeDetectionStrategy, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { Hotel } from '../../../../core/models/hotel.model';
 
 @Component({
   selector: 'app-hotel-card',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [NgOptimizedImage],
   templateUrl: './hotel-card.html',
   styleUrl: './hotel-card.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'hotel-card shadow-md',
+    '(click)': 'onCardClick()',
+    role: 'article',
+    tabindex: '0',
+  },
 })
 export class HotelCard {
   hotel = input.required<Hotel>();
-
   viewDetails = output<number>();
 
   onCardClick(): void {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
 import { Room } from '../../../../core/models/room.model';
 
 @Component({
@@ -6,13 +6,15 @@ import { Room } from '../../../../core/models/room.model';
   imports: [],
   templateUrl: './hotel-room-card.html',
   styleUrl: './hotel-room-card.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HotelRoomCard {
-  @Input({ required: true }) room!: Room;
-  @Input() canReserve: boolean = false;
-  @Output() reserve = new EventEmitter<number>();
+  room = input.required<Room>();
+  canReserve = input(false);
 
-  onReserve() {
-    this.reserve.emit(this.room.id);
+  reserve = output<number>();
+
+  onReserve(): void {
+    this.reserve.emit(this.room().id);
   }
 }
