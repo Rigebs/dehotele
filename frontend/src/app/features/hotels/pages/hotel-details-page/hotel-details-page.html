@@ -76,9 +76,8 @@
                 <p>Selecciona las fechas para ver precios exactos</p>
             </div>
 
-            <app-hotel-booking-filters [initialCheckIn]="route.snapshot.queryParams['checkIn'] || ''"
-                [initialCheckOut]="route.snapshot.queryParams['checkOut'] || ''"
-                (filterChange)="handleFilterChange($event)">
+            <app-hotel-booking-filters [initialCheckIn]="queryParams().checkIn || ''"
+                [initialCheckOut]="queryParams().checkOut || ''" (filterChange)="handleFilterChange($event)">
             </app-hotel-booking-filters>
 
             @if (isLoadingRooms()) {
@@ -100,11 +99,7 @@
             </div>
         </section>
 
-        @if (hotel()) {
-
         <app-hotel-reviews-section [hotelId]="hotelData.id"></app-hotel-reviews-section>
-        }
-
     </main>
 
     <aside class="hotel-sidebar">
@@ -119,7 +114,7 @@
             @if (hasValidDates()) {
             <div class="summary-item">
                 <span>Estancia</span>
-                <small>{{ queryParams()['checkIn'] }} - {{ queryParams()['checkOut'] }}</small>
+                <small>{{ queryParams().checkIn }} - {{ queryParams().checkOut }}</small>
             </div>
             }
 

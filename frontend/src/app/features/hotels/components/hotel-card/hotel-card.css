@@ -18,15 +18,15 @@
 
 /* Contenedor de Imagen */
 .image-container {
+  position: relative; /* Obligatorio para img fill */
   width: 100%;
   height: 200px;
   overflow: hidden;
+  background-color: #f1f5f9; /* Color de fondo mientras carga */
 }
 
 .image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* Mantiene la proporción sin deformar */
   transition: transform 0.5s ease;
 }
 
@@ -118,7 +118,6 @@
   color: var(--accent-color);
 }
 
-/* Botón Ajustado */
 .full-width {
   width: 100%;
   margin-top: auto;

@@ -1,12 +1,13 @@
 <div class="profile-container p-4">
     <header class="mb-4">
         <h2 class="text-center">User Profile Management</h2>
-        <p class="text-center" style="color: var(--text-light)">Update your personal information and security settings
+        <p class="text-center" [style.color]="'var(--text-light)'">
+            Update your personal information and security settings
         </p>
     </header>
 
     @if (message(); as msg) {
-    <div [class]="'alert mb-4 p-3 ' + msg.type">
+    <div class="alert mb-4 p-3" [class.success]="msg.type === 'success'" [class.error]="msg.type === 'error'">
         {{ msg.text }}
     </div>
     }
@@ -19,6 +20,7 @@
                     <label for="fullName" class="mb-1">Full Name</label>
                     <input id="fullName" type="text" formControlName="fullName" placeholder="Enter your full name"
                         class="w-full" />
+
                     @if (profileForm.controls.fullName.errors?.['required'] && profileForm.controls.fullName.touched) {
                     <small class="error-text">Full name is required</small>
                     }
@@ -28,13 +30,18 @@
                     <label for="email" class="mb-1">Email Address</label>
                     <input id="email" type="email" formControlName="email" placeholder="name@example.com"
                         class="w-full" />
+
                     @if (profileForm.controls.email.errors?.['email'] && profileForm.controls.email.touched) {
                     <small class="error-text">Please enter a valid email</small>
                     }
                 </div>
 
                 <button type="submit" class="primary" [disabled]="profileForm.invalid || isLoading()">
-                    @if (isLoading()) { <span>Updating...</span> } @else { Update Profile }
+                    @if (isLoading()) {
+                    <span>Updating...</span>
+                    } @else {
+                    Update Profile
+                    }
                 </button>
             </form>
         </section>
@@ -52,6 +59,7 @@
                     <label for="newPassword" class="mb-1">New Password</label>
                     <input id="newPassword" type="password" formControlName="newPassword"
                         placeholder="Min. 8 characters" class="w-full" />
+
                     @if (passwordForm.controls.newPassword.errors?.['minlength'] &&
                     passwordForm.controls.newPassword.touched) {
                     <small class="error-text">New password must be at least 8 characters</small>
@@ -59,7 +67,11 @@
                 </div>
 
                 <button type="submit" class="accent" [disabled]="passwordForm.invalid || isLoading()">
-                    @if (isLoading()) { <span>Changing...</span> } @else { Change Password }
+                    @if (isLoading()) {
+                    <span>Changing...</span>
+                    } @else {
+                    Change Password
+                    }
                 </button>
             </form>
         </section>

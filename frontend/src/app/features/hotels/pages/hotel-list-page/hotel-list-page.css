@@ -29,21 +29,6 @@
   flex-wrap: wrap;
 }
 
-.filters input,
-.filters select {
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  min-width: 180px;
-  transition: 0.3s;
-}
-
-.filters input:focus,
-.filters select:focus {
-  outline: none;
-  border-color: var(--primary-color);
-}
-
 /* ================= RESULT COUNT ================= */
 
 .results-count {

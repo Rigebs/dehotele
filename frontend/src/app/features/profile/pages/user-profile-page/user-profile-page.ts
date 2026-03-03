@@ -1,17 +1,21 @@
-import { ChangeDetectionStrategy, Component, inject, signal, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../services/user-service';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-user-profile-page',
-  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './user-profile-page.html',
   styleUrl: './user-profile-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'profile-page-root',
+  },
 })
 export class UserProfilePage {
-  protected readonly userService = inject(UserService);
+  private readonly userService = inject(UserService);
   private readonly fb = inject(NonNullableFormBuilder);
 
   isLoading = signal(false);
@@ -28,15 +32,17 @@ export class UserProfilePage {
   });
 
   constructor() {
-    effect(() => {
-      const user = this.userService.user();
-      if (user) {
+    toObservable(this.userService.user)
+      .pipe(
+        filter((user) => !!user),
+        takeUntilDestroyed(),
+      )
+      .subscribe((user) => {
         this.profileForm.patchValue({
-          fullName: user.fullName,
-          email: user.email,
+          fullName: user?.fullName,
+          email: user?.email,
         });
-      }
-    });
+      });
   }
 
   updateProfile(): void {

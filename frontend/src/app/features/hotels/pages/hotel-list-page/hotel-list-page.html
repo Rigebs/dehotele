@@ -43,31 +43,30 @@
             </div>
         </div>
     </div>
+
     <div [formGroup]="filtersForm">
         <div class="section-header">
-            <h2>Available Hotels</h2>
+            <h2>Hoteles Disponibles</h2>
 
             <app-select formControlName="sort" [options]="[
-          { label: 'Name (A-Z)', value: 'name,asc' },
-          { label: 'Price (Low to High)', value: 'price,asc' },
-          { label: 'Price (High to Low)', value: 'price,desc' },
-          { label: 'Best Rated', value: 'rating,desc' }
-        ]" placeholder="Sort by" />
+                { label: 'Nombre (A-Z)', value: 'name,asc' },
+                { label: 'Precio (Menor a Mayor)', value: 'price,asc' },
+                { label: 'Precio (Mayor a Menor)', value: 'price,desc' },
+                { label: 'Mejor Valorados', value: 'rating,desc' }
+            ]" placeholder="Ordenar por" />
         </div>
 
         <div class="filters">
             <app-select formControlName="rating" [options]="[
-          { label: 'All ratings', value: null },
-          { label: '4+ stars', value: 4 },
-          { label: '3+ stars', value: 3 }
-        ]" placeholder="Rating" />
+                { label: 'Cualquier calificación', value: null },
+                { label: '4+ estrellas', value: 4 },
+                { label: '3+ estrellas', value: 3 }
+            ]" placeholder="Calificación" />
         </div>
     </div>
 
     @if (!loading()) {
-    <p class="results-count">
-        {{ totalElements() }} hotels found
-    </p>
+    <p class="results-count">{{ totalElements() }} hoteles encontrados</p>
     }
 
     @if (loading()) {
@@ -86,8 +85,8 @@
     } @else {
     @if (hotels().length === 0) {
     <div class="empty-state">
-        <h3>No hotels found 😢</h3>
-        <p>Try adjusting your filters.</p>
+        <h3>No se encontraron hoteles 😢</h3>
+        <p>Intenta ajustando tus filtros de búsqueda.</p>
     </div>
     } @else {
     <div class="hotel-grid">
@@ -99,15 +98,13 @@
     @if (totalPages() > 1) {
     <div class="pagination">
         <button (click)="handlePageChange(-1)" [disabled]="currentPage() === 0">
-            Previous
+            Anterior
         </button>
 
-        <span>
-            Page {{ currentPage() + 1 }} / {{ totalPages() }}
-        </span>
+        <span>Página {{ currentPage() + 1 }} de {{ totalPages() }}</span>
 
         <button (click)="handlePageChange(1)" [disabled]="currentPage() + 1 >= totalPages()">
-            Next
+            Siguiente
         </button>
     </div>
     }
