@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, finalize, switchMap, tap } from 'rxjs';
 import { HotelBookingFilters } from '../../components/hotel-booking-filters/hotel-booking-filters';
@@ -36,6 +36,15 @@ export class HotelDetailsPage {
   readonly isSubmittingReview = signal(false);
   readonly guests = signal<number>(1);
   private readonly refreshReviews = signal<void>(undefined);
+
+  protected readonly queryParams = toSignal(this.route.queryParams, {
+    initialValue: {} as Params,
+  });
+
+  readonly hasValidDates = computed(() => {
+    const params = this.queryParams();
+    return !!(params['checkIn'] && params['checkOut']);
+  });
 
   readonly hotelId = computed(() => Number(this.route.snapshot.paramMap.get('id')));
 

@@ -110,3 +110,24 @@
     font-size: 1.5rem;
   }
 }
+/* Estado deshabilitado (cuando el atributo [disabled] está presente) */
+.btn-reserve:disabled {
+  background-color: #d1d5db; /* Gris suave */
+  color: #9ca3af; /* Texto grisáceo */
+  cursor: not-allowed; /* Cambia el cursor a "prohibido" */
+  transform: none; /* Evita que se mueva al hacer hover */
+  box-shadow: none; /* Quita sombras */
+  border: 1px solid #e5e7eb;
+}
+
+/* Evitar que el efecto hover del botón original cambie el color si está deshabilitado */
+.btn-reserve:disabled:hover {
+  background-color: #d1d5db;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Opcional: bajar un poco la opacidad de la sección de precio para dar énfasis al bloqueo */
+.btn-reserve:disabled ~ .price-tag {
+  opacity: 0.7;
+}

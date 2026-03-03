@@ -25,8 +25,9 @@
             <span class="amount">${{ room.pricePerNight }}</span>
             <span class="unit">/ noche</span>
         </div>
-        <button (click)="onReserve()" class="btn-reserve">
-            Reservar ahora
+        <button (click)="onReserve()" class="btn-reserve" [disabled]="!canReserve" [class.disabled]="!canReserve"
+            [title]="!canReserve ? 'Selecciona fechas de entrada y salida para reservar' : ''">
+            {{ canReserve ? 'Reservar ahora' : 'Selecciona fechas' }}
         </button>
     </div>
 </div>

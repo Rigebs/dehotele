@@ -90,7 +90,7 @@
 
             <div class="room-list">
                 @for (room of availableRooms(); track room.id) {
-                <app-hotel-room-card [room]="room" (reserve)="reserve($event)">
+                <app-hotel-room-card [room]="room" [canReserve]="hasValidDates()" (reserve)="reserve($event)">
                 </app-hotel-room-card>
                 } @empty {
                 @if (!isLoadingRooms()) {
@@ -110,16 +110,40 @@
     <aside class="hotel-sidebar">
         <div class="sticky-card">
             <h4>Resumen de búsqueda</h4>
+
             <div class="summary-item">
-                <span>Huéspedes </span>
-                <strong>{{ guests() }} persona(s)</strong>
+                <span>Huéspedes</span>
+                <strong>{{ guests() }} {{ guests() === 1 ? 'persona' : 'personas' }}</strong>
             </div>
+
+            @if (hasValidDates()) {
+            <div class="summary-item">
+                <span>Estancia</span>
+                <small>{{ queryParams()['checkIn'] }} - {{ queryParams()['checkOut'] }}</small>
+            </div>
+            }
+
             <hr>
+
             <div class="price-preview">
-                <p>Desde</p>
-                <span class="big-price">${{ availableRooms()[0]?.pricePerNight ?? '--' }}</span>
+                <p>{{ hasValidDates() ? 'Total desde' : 'Desde por noche' }}</p>
+                <span class="big-price">
+                    ${{ availableRooms()[0]?.pricePerNight ?? '--' }}
+                </span>
             </div>
+
+            @if (!hasValidDates()) {
+            <p class="alert-info-text">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                </svg>
+                Selecciona fechas para ver disponibilidad total.
+            </p>
+            }
+
             <p class="tax-info">Impuestos y cargos incluidos</p>
+
             <button class="btn-outline-full">Ver fotos de las habitaciones</button>
         </div>
     </aside>

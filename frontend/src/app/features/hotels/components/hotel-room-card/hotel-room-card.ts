@@ -9,6 +9,7 @@ import { Room } from '../../../../core/models/room.model';
 })
 export class HotelRoomCard {
   @Input({ required: true }) room!: Room;
+  @Input() canReserve: boolean = false;
   @Output() reserve = new EventEmitter<number>();
 
   onReserve() {
