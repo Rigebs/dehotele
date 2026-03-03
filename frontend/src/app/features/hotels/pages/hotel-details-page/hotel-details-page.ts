@@ -1,54 +1,67 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HotelService } from '../../services/hotel-service';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { combineLatest, switchMap } from 'rxjs';
-import { DatePicker } from '../../../../shared/ui/date-picker/date-picker';
-import { ReviewService } from '../../services/review-service';
+import { combineLatest, finalize, switchMap, tap } from 'rxjs';
+import { HotelBookingFilters } from '../../components/hotel-booking-filters/hotel-booking-filters';
 import { Select, SelectOption } from '../../../../shared/ui/select/select';
+import { HotelService } from '../../services/hotel-service';
+import { ReviewService } from '../../services/review-service';
+import { HotelRoomCard } from '../../components/hotel-room-card/hotel-room-card';
+import { HotelReviewsSection } from '../../components/hotel-reviews-section/hotel-reviews-section';
 
 @Component({
   selector: 'app-hotel-details-page',
-  imports: [ReactiveFormsModule, CommonModule, DatePicker, Select],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HotelBookingFilters,
+    HotelRoomCard,
+    HotelReviewsSection,
+  ],
   templateUrl: './hotel-details-page.html',
   styleUrl: './hotel-details-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HotelDetailsPage {
-  private readonly route = inject(ActivatedRoute);
+  protected readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly hotelService = inject(HotelService);
   private readonly reviewService = inject(ReviewService);
 
-  private readonly router = inject(Router);
-
-  readonly today = new Date();
-
+  readonly isLoadingRooms = signal(false);
+  readonly isSubmittingReview = signal(false);
   readonly guests = signal<number>(1);
+  private readonly refreshReviews = signal<void>(undefined);
 
   readonly hotelId = computed(() => Number(this.route.snapshot.paramMap.get('id')));
 
   readonly hotel = toSignal(
     combineLatest([this.route.paramMap, this.route.queryParamMap]).pipe(
+      tap(() => this.isLoadingRooms.set(true)),
       switchMap(([params, queryParams]) => {
         const id = Number(params.get('id'));
         const capacity = Number(queryParams.get('guests')) || 1;
         const checkIn = queryParams.get('checkIn') ?? '';
         const checkOut = queryParams.get('checkOut') ?? '';
-        return this.hotelService.getHotelAvailable(id, capacity, checkIn, checkOut);
+
+        this.guests.set(capacity);
+
+        return this.hotelService
+          .getHotelAvailable(id, capacity, checkIn, checkOut)
+          .pipe(finalize(() => this.isLoadingRooms.set(false)));
       }),
     ),
     { initialValue: null },
   );
 
-  private readonly refreshReviews = signal<void>(undefined);
-
   readonly reviews = toSignal(
     this.route.paramMap.pipe(
       switchMap((params) => {
-        this.refreshReviews(); // Dependencia para recargar
+        this.refreshReviews();
         return this.reviewService.getHotelReviews(Number(params.get('id')));
       }),
     ),
@@ -60,43 +73,6 @@ export class HotelDetailsPage {
     comment: ['', [Validators.required, Validators.minLength(10)]],
   });
 
-  isSubmittingReview = signal(false);
-
-  submitReview() {
-    if (this.reviewForm.invalid) return;
-
-    this.isSubmittingReview.set(true);
-    const request = this.reviewForm.getRawValue();
-
-    this.reviewService.createReview(this.hotelId(), request).subscribe({
-      next: () => {
-        this.reviewForm.reset({ rating: 5, comment: '' });
-        this.refreshReviews.set(undefined);
-        this.isSubmittingReview.set(false);
-      },
-      error: () => this.isSubmittingReview.set(false),
-    });
-  }
-
-  readonly minCheckOut = computed(() => {
-    const checkIn = this.reservationForm.get('checkInDate')?.value;
-    return checkIn ? new Date(checkIn) : new Date();
-  });
-
-  readonly availableRooms = computed(() => {
-    const currentHotel = this.hotel();
-    const currentGuests = this.guests();
-
-    if (!currentHotel || !currentHotel.rooms) return [];
-
-    return currentHotel.rooms.filter((room) => room.capacity >= currentGuests);
-  });
-
-  readonly reservationForm = this.fb.nonNullable.group({
-    checkInDate: ['', Validators.required],
-    checkOutDate: ['', Validators.required],
-  });
-
   readonly ratingOptions: SelectOption[] = [
     { label: '5 - Excelente', value: 5 },
     { label: '4 - Muy bueno', value: 4 },
@@ -105,32 +81,48 @@ export class HotelDetailsPage {
     { label: '1 - Pésimo', value: 1 },
   ];
 
-  constructor() {
-    this.route.queryParams.subscribe((params) => {
-      this.guests.set(Number(params['guests'] ?? 1));
+  readonly availableRooms = computed(() => {
+    const currentHotel = this.hotel();
+    return currentHotel?.rooms?.filter((room) => room.capacity >= this.guests()) ?? [];
+  });
 
-      if (params['checkIn'] && params['checkOut']) {
-        this.reservationForm.patchValue({
-          checkInDate: params['checkIn'],
-          checkOutDate: params['checkOut'],
-        });
-      }
+  handleFilterChange(filters: { checkIn: string; checkOut: string }) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        checkIn: filters.checkIn,
+        checkOut: filters.checkOut,
+        guests: this.guests(),
+      },
+      queryParamsHandling: 'merge',
     });
   }
 
   reserve(roomId: number) {
-    if (this.reservationForm.invalid) return;
-
-    const { checkInDate, checkOutDate } = this.reservationForm.getRawValue();
+    const qp = this.route.snapshot.queryParams;
 
     this.router.navigate(['/reservations/create'], {
       queryParams: {
         hotelId: this.hotel()?.id,
-        roomId: roomId,
-        checkIn: checkInDate,
-        checkOut: checkOutDate,
+        roomId,
+        checkIn: qp['checkIn'],
+        checkOut: qp['checkOut'],
         guests: this.guests(),
       },
+    });
+  }
+
+  submitReview() {
+    if (this.reviewForm.invalid) return;
+
+    this.isSubmittingReview.set(true);
+    this.reviewService.createReview(this.hotelId(), this.reviewForm.getRawValue()).subscribe({
+      next: () => {
+        this.reviewForm.reset({ rating: 5, comment: '' });
+        this.refreshReviews.set(undefined);
+        this.isSubmittingReview.set(false);
+      },
+      error: () => this.isSubmittingReview.set(false),
     });
   }
 }

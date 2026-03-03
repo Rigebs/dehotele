@@ -1,0 +1,32 @@
+<div class="room-card-horizontal">
+    <div class="room-details">
+        <h4>{{ room.name }}</h4>
+        <p class="room-capacity">Hasta {{ room.capacity }} personas</p>
+        <ul class="room-features">
+            <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Cancelación gratuita
+            </li>
+            <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Desayuno incluido
+            </li>
+        </ul>
+    </div>
+
+    <div class="room-actions">
+        <div class="price-tag">
+            <span class="amount">${{ room.pricePerNight }}</span>
+            <span class="unit">/ noche</span>
+        </div>
+        <button (click)="onReserve()" class="btn-reserve">
+            Reservar ahora
+        </button>
+    </div>
+</div>

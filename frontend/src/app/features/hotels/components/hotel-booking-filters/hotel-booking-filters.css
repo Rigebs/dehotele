@@ -1,0 +1,103 @@
+/* Heredamos las variables del :root definido en styles.css */
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Contenedor principal del buscador */
+.date-picker-bar {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: var(--bg-color); /* Usamos el blanco del root */
+  padding: 1.25rem;
+  border-radius: var(--radius-md); /* Usamos el radio de 12px */
+  margin: 1.25rem 0 2.5rem;
+  gap: 1rem;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 4px 12px var(--shadow-color); /* Consistencia con .card */
+}
+
+/* Wrappers para los date-pickers */
+.input-wrapper {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Divisor visual entre fechas */
+.date-picker-bar .divider {
+  width: 1px;
+  height: 40px;
+  background-color: #d1d5db;
+  align-self: center;
+}
+
+/* Contenedor del botón */
+.search-button-container {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.625rem;
+}
+
+/* Estilos del botón de búsqueda */
+.btn-search-availability {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-sm); /* Usamos el radio de 6px */
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-search-availability svg {
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.btn-search-availability:hover:not(:disabled) {
+  background-color: #1e3a8a; /* Azul un poco más oscuro o puedes usar var(--primary-color) con filter: brightness(0.9) */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--shadow-color);
+}
+
+.btn-search-availability:disabled {
+  background-color: #d1d5db;
+  color: var(--text-light);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .date-picker-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .date-picker-bar .divider {
+    display: none;
+  }
+
+  .input-wrapper {
+    min-width: 100%;
+  }
+
+  .search-button-container {
+    margin-top: 0.3rem;
+  }
+
+  .btn-search-availability {
+    font-size: 0.95rem;
+  }
+}

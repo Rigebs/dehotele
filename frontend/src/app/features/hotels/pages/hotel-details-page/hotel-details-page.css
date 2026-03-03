@@ -1,4 +1,4 @@
-/* ================= VARIABLES (Ajusta según tu proyecto) ================= */
+/* ================= VARIABLES ================= */
 :root {
   --primary-color: #2563eb;
   --accent-color: #f59e0b;
@@ -102,7 +102,7 @@
 /* ================= LAYOUT PRINCIPAL ================= */
 .hotel-content {
   display: grid;
-  grid-template-columns: 1fr 350px; /* Layout Desktop */
+  grid-template-columns: 1fr 350px;
   gap: 50px;
   margin-top: -40px;
   position: relative;
@@ -153,10 +153,6 @@
   color: var(--primary-color);
   font-size: 0.95rem;
   margin-bottom: 40px;
-}
-
-.icon-pin {
-  color: var(--primary-color);
 }
 
 /* ================= AMENITIES ================= */
@@ -210,83 +206,24 @@
   color: var(--text-color);
 }
 
-/* ================= BOOKING & DATE PICKER ================= */
-.date-picker-bar {
-  display: flex;
-  background: #f3f4f6;
-  padding: 15px 25px;
-  border-radius: 15px;
-  margin: 20px 0 40px;
-  align-items: center;
+/* ================= BOOKING SECTION ================= */
+.booking-section {
+  position: relative;
+  margin-bottom: 40px;
 }
 
-.input-wrapper {
-  flex: 1;
-}
-
-.date-picker-bar .divider {
-  width: 1px;
-  height: 40px;
-  background: #d1d5db;
-  margin: 0 20px;
-}
-
-/* ================= ROOM CARDS ================= */
-.room-card-horizontal {
-  display: flex;
-  justify-content: space-between;
-  padding: 25px;
-  border: 1px solid #e5e7eb;
-  border-radius: 15px;
+.section-header {
   margin-bottom: 20px;
-  transition: 0.3s ease;
 }
 
-.room-card-horizontal:hover {
-  border-color: var(--primary-color);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+.section-header h3 {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
 }
 
-.room-details h4 {
-  font-size: 1.3rem;
-  margin-bottom: 8px;
-}
-
-.room-features {
-  list-style: none;
-  margin-top: 10px;
-  font-size: 0.85rem;
-  color: #059669;
-  padding: 0;
-}
-
-.room-actions {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 15px;
-}
-
-.price-tag .amount {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--primary-color);
-}
-
-.btn-reserve {
-  background: var(--primary-color);
-  color: white;
-  padding: 12px 25px;
-  border-radius: 10px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-reserve:disabled {
-  background: #ccc;
-  cursor: not-allowed;
+.section-header p {
+  color: var(--text-light);
+  font-size: 0.95rem;
 }
 
 /* ================= SIDEBAR ================= */
@@ -300,11 +237,23 @@
   border: 1px solid #f3f4f6;
 }
 
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
 .big-price {
   font-size: 2.2rem;
   font-weight: 800;
   display: block;
   color: var(--text-color);
+}
+
+.tax-info {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: 5px;
 }
 
 .btn-outline-full {
@@ -319,163 +268,84 @@
   cursor: pointer;
 }
 
-/* ================= MEDIA QUERIES (RESPONSIVO) ================= */
+/* ================= LOADING & STATES ================= */
+.rooms-loading-overlay {
+  position: absolute;
+  top: 100px; /* Debajo del buscador */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+}
 
-/* Tablets y pantallas medianas */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* ================= MEDIA QUERIES ================= */
 @media (max-width: 1024px) {
   .hotel-content {
-    grid-template-columns: 1fr; /* Una sola columna */
+    grid-template-columns: 1fr;
     margin-top: 0;
     gap: 30px;
   }
-
   .hotel-sidebar {
-    order: -1; /* El resumen de búsqueda sube */
+    order: -1;
   }
-
   .sticky-card {
     position: relative;
     top: 0;
   }
 }
 
-/* Móviles */
 @media (max-width: 768px) {
   .hero-detail {
     height: 350px;
   }
-
   .hero-overlay h1 {
     font-size: 2.2rem;
   }
-
   .hotel-main {
     padding: 20px;
   }
-
-  .date-picker-bar {
-    flex-direction: column; /* Apilar fechas */
-    align-items: stretch;
-    gap: 15px;
-    padding: 15px;
-  }
-
-  .date-picker-bar .divider {
-    display: none; /* Quitar línea vertical en móvil */
-  }
-
   .room-card-horizontal {
-    flex-direction: column; /* Tarjeta de habitación vertical */
+    flex-direction: column;
     gap: 20px;
   }
-
   .room-actions {
     text-align: left;
     border-top: 1px solid #eee;
     padding-top: 15px;
   }
-
   .amenities-grid {
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas de servicios */
+    grid-template-columns: repeat(2, 1fr);
   }
-}
-
-/* Pantallas muy pequeñas */
-@media (max-width: 480px) {
-  .hero-overlay h1 {
-    font-size: 1.8rem;
-  }
-
-  .address-box {
-    font-size: 0.85rem;
-    display: flex;
-  }
-}
-
-.reviews-section {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid #eee;
-}
-
-.add-review-box {
-  background: #f9f9f9;
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-}
-
-.review-textarea {
-  width: 100%;
-  margin: 1rem 0;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  resize: none;
-  font-family: inherit;
-}
-
-.review-item {
-  padding: 1.5rem 0;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.review-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.author-avatar {
-  width: 32px;
-  height: 32px;
-  background: #007bff;
-  color: white;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 0.75rem;
-  font-weight: bold;
-}
-
-.review-date {
-  font-size: 0.85rem;
-  color: #888;
-}
-
-.btn-submit-review {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-submit-review:disabled {
-  background: #ccc;
-}
-
-.rating-input-container {
-  margin-bottom: 1.5rem;
-  max-width: 160px; /* O el ancho que prefieras para el selector */
-}
-
-/* Estilo para asegurar que el textarea no se pegue al select */
-.review-textarea {
-  width: 100%;
-  margin-top: 0.5rem;
-  padding: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background-color: #ffffff;
-  transition: border-color 0.2s;
-}
-
-.review-textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
