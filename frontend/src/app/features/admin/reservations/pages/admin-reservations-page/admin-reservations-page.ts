@@ -15,7 +15,6 @@ import { Select, SelectOption } from '../../../../../shared/ui/select/select';
 import { FormsModule } from '@angular/forms';
 import { AdminReservationsTable } from '../../components/admin-reservations-table/admin-reservations-table';
 import { DatePicker } from '../../../../../shared/ui/date-picker/date-picker';
-import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { HotelService } from '../../../../hotels/services/hotel-service';
 import { DatePipe } from '@angular/common';
@@ -31,7 +30,6 @@ import { DatePipe } from '@angular/common';
 export class AdminReservationsPage implements OnInit, OnDestroy {
   private readonly adminResService = inject(AdminReservationService);
   private readonly hotelService = inject(HotelService);
-  private readonly router = inject(Router);
 
   menuAbierto = false;
 
@@ -176,10 +174,6 @@ export class AdminReservationsPage implements OnInit, OnDestroy {
 
   exportData(): void {
     console.log('Exportando datos filtrados...');
-  }
-
-  onCreateReservation(): void {
-    this.router.navigate(['/admin/reservations/new']);
   }
 
   openFilters() {

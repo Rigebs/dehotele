@@ -33,7 +33,7 @@ public class DashboardServiceImpl implements DashboardService {
         
         // Calculamos rating promedio global de todos los hoteles
         double avgRating = hotelRepository.getGlobalAverageRating();
-        
+
         var recentReservations = reservationRepository.findTop5ByOrderByCreatedAtDesc().stream()
                 .map(reservationMapper::toResponseDTO)
                 .collect(Collectors.toList());
