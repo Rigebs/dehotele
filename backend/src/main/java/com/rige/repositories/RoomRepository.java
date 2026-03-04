@@ -32,4 +32,7 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long>, JpaSpec
           @Param("checkIn") LocalDate checkIn,
           @Param("checkOut") LocalDate checkOut
   );
+
+  // Total de habitaciones operativas en todo el sistema
+  long countByActiveTrue();
 }

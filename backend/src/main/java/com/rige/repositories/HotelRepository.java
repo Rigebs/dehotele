@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface HotelRepository extends JpaRepository<HotelEntity, Long>, JpaSpecificationExecutor<HotelEntity> {
@@ -45,4 +46,16 @@ public interface HotelRepository extends JpaRepository<HotelEntity, Long>, JpaSp
 
   @NonNull
   Page<HotelEntity> findAll(@NonNull Specification<HotelEntity> spec, @NonNull Pageable pageable);
+
+  long countByActiveTrue();
+
+  // Para el ranking de hoteles mejor valorados
+  List<HotelEntity> findTop5ByActiveTrueOrderByRatingDesc();
+
+  // Para el gráfico de distribución por ciudades
+  @Query("SELECT h.city, COUNT(h) FROM HotelEntity h GROUP BY h.city")
+  List<Object[]> countHotelsByCity();
+
+  @Query("SELECT AVG(h.rating) FROM HotelEntity h")
+  Double getGlobalAverageRating();
 }

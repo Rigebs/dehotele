@@ -1,8 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ReservationRequest, ReservationResponse } from '../../../core/models/reservation.model';
 import { environment } from '../../../../environments/environment.development';
-import { HttpClient } from '@angular/common/http';
-import { PageResponse } from '../../../core/models/hotel.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +12,15 @@ export class ReservationService {
 
   createReservation(request: ReservationRequest) {
     return this.http.post<ReservationResponse>(this.apiUrl, request);
+  }
+
+  checkAvailability(roomId: number, checkIn: string, checkOut: string) {
+    const params = new HttpParams()
+      .set('roomId', roomId.toString())
+      .set('checkIn', checkIn)
+      .set('checkOut', checkOut);
+
+    return this.http.get<boolean>(`${this.apiUrl}/check-availability`, { params });
   }
 
   getReservationsByUserId(userId: number) {

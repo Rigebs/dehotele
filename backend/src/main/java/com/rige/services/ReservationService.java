@@ -6,6 +6,7 @@ import com.rige.filters.ReservationFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationService {
@@ -13,6 +14,8 @@ public interface ReservationService {
     ReservationResponse create(ReservationRequest dto);
 
     List<ReservationResponse> findByUser(Long userId);
+
+    boolean isAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
 
     void cancel(Long reservationId);
 

@@ -1,11 +1,14 @@
 package com.rige.repositories;
 
 import com.rige.entities.ReservationEntity;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,4 +32,23 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             LocalDate checkIn,
             LocalDate checkOut
     );
+
+    @Query("SELECT COALESCE(SUM(r.totalPrice), 0) FROM ReservationEntity r WHERE r.status IN ('CREATED', 'COMPLETED')")
+    BigDecimal calculateTotalRevenue();
+
+    // 2. Gráfico de ingresos por mes (Sintaxis MySQL: MONTH())
+    @Query("SELECT MONTH(r.createdAt), SUM(r.totalPrice) " +
+            "FROM ReservationEntity r WHERE r.status IN ('CREATED', 'COMPLETED') " +
+            "GROUP BY MONTH(r.createdAt)")
+    List<Object[]> findRevenueByMonth();
+
+    @EntityGraph(attributePaths = {"user", "room"})
+    List<ReservationEntity> findTop5ByOrderByCreatedAtDesc();
+
+    // 4. Reservas Activas Hoy
+    // Corregido: Filtramos por CREATED (o el estado que consideres válido para ocupar la habitación)
+    @Query("SELECT COUNT(r) FROM ReservationEntity r " +
+            "WHERE r.status = 'CREATED' " +
+            "AND :today BETWEEN r.checkInDate AND r.checkOutDate")
+    long countActiveReservationsNow(@Param("today") LocalDate today);
 }

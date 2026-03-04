@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -108,6 +109,11 @@ public class ReservationServiceImpl implements ReservationService {
                 .stream()
                 .map(reservationMapper::toResponseDTO)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
+        return reservationRepository.findConflictingReservations(roomId, checkIn, checkOut).isEmpty();
     }
 
     @Override

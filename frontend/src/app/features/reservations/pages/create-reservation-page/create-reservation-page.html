@@ -17,8 +17,13 @@
 
             <div class="actions">
                 <button type="button" class="btn-flat" (click)="location.back()">Regresar</button>
-                <button type="button" class="btn-primary" (click)="onSubmit()">
-                    Confirmar Reserva
+                <button type="button" class="btn-primary" (click)="onSubmit()" [disabled]="isSubmitting()">
+
+                    @if (isSubmitting()) {
+                    <span>Procesando...</span>
+                    } @else {
+                    <span>Confirmar Reserva</span>
+                    }
                 </button>
             </div>
         </main>
