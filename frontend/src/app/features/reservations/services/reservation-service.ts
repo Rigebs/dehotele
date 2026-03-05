@@ -8,6 +8,21 @@ export interface UpdateReservationRequest {
   checkOutDate: string;
 }
 
+export enum ReservationStatus {
+  CREATED = 'CREATED',
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
+}
+
+export interface ReservationFilter {
+  userId?: number;
+  roomId?: number;
+  status?: ReservationStatus;
+  startDate?: string;
+  endDate?: string;
+  search?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,8 +43,16 @@ export class ReservationService {
     return this.http.get<boolean>(`${this.apiUrl}/check-availability`, { params });
   }
 
-  getReservationsByUserId(userId: number) {
-    return this.http.get<ReservationResponse[]>(`${this.apiUrl}/user/${userId}`);
+  getMyReservations(page: number = 0, size: number = 5, filter: ReservationFilter = {}) {
+    let params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+
+    Object.entries(filter).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    return this.http.get<any>(`${this.apiUrl}/my`, { params });
   }
 
   updateReservation(id: number, request: UpdateReservationRequest) {

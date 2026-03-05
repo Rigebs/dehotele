@@ -104,12 +104,15 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReservationResponse> findByUser(Long userId) {
+    public Page<ReservationResponse> findByUser(Long userId, ReservationFilter
+            filter, Pageable pageable) {
 
-        return reservationRepository.findByUserId(userId)
-                .stream()
-                .map(reservationMapper::toResponseDTO)
-                .toList();
+        filter.setUserId(userId);
+
+        Specification<ReservationEntity> spec = ReservationSpecification.build(filter);
+
+        return reservationRepository.findAll(spec, pageable)
+                .map(reservationMapper::toResponseDTO);
     }
 
     @Transactional(readOnly = true)

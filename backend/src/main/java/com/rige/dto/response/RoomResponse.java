@@ -15,4 +15,5 @@ public class RoomResponse {
     private String name;
     private BigDecimal pricePerNight;
     private Integer capacity;
+    private HotelResponse hotel;
 }

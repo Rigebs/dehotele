@@ -1,11 +1,96 @@
-<app-button>
-    <h3>Reservation #{{ reservation().id }}</h3>
+<div class="reservation-card" [class.editing-mode]="isEditing()" [class.is-cancelled]="res().status === 'CANCELLED'">
 
-    <p>Status: {{ reservation().status }}</p>
-    <p>Check-in: {{ reservation().checkInDate }}</p>
-    <p>Check-out: {{ reservation().checkOutDate }}</p>
+    <div class="hotel-image-container">
+        <img [src]="res().room.hotel.imageUrl || 'assets/default-hotel.jpg'" [alt]="res().room.hotel.name"
+            class="hotel-image">
+        <span class="status-badge" [ngClass]="statusConfig().class">
+            {{ statusConfig().label }}
+        </span>
+    </div>
 
-    @if (reservation().status !== 'CANCELLED') {
-    <app-button (click)="onCancel()">Cancel</app-button>
-    }
-</app-button>
+    <div class="card-content">
+        @if (!isEditing()) {
+        <div class="info-layout">
+            <header class="res-header">
+                <div class="title-group">
+                    <h3 class="hotel-name">{{ res().room.hotel.name }}</h3>
+                    <p class="room-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 4v16" />
+                            <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+                            <path d="M2 17h20" />
+                            <path d="M6 8v9" />
+                        </svg>
+                        {{ res().room.name }}
+                    </p>
+                </div>
+            </header>
+
+            <div class="res-details">
+                <div class="dates-display">
+                    <div class="date-block">
+                        <span class="label">Check-in</span>
+                        <span class="value">{{ res().checkInDate | date:'dd MMM, yyyy' }}</span>
+                    </div>
+                    <div class="date-separator">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </div>
+                    <div class="date-block">
+                        <span class="label">Check-out</span>
+                        <span class="value">{{ res().checkOutDate | date:'dd MMM, yyyy' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="res-footer">
+                <div class="price-box">
+                    <span class="price-label">Precio Total</span>
+                    <span class="price-amount">${{ res().totalPrice | number:'1.2-2' }}</span>
+                </div>
+                <div class="action-buttons">
+                    @if (res().status === 'CREATED') {
+                    <button class="btn-icon btn-edit" (click)="onEdit()" title="Modificar fechas">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                            <path d="m15 5 4 4" />
+                        </svg>
+                        Editar
+                    </button>
+                    <button class="btn-icon btn-cancel" (click)="onCancelReservation()" title="Cancelar reserva">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6h18" />
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                        </svg>
+                    </button>
+                    }
+                </div>
+            </footer>
+        </div>
+        } @else {
+        <form [formGroup]="editForm" (ngSubmit)="onUpdate()" class="edit-mode-form slide-in">
+            <div class="edit-header">
+                <h3>Modificar Fechas</h3>
+                <p>Ajusta tu estancia para <b>{{ res().room.hotel.name }}</b></p>
+            </div>
+
+            <div class="edit-grid">
+                <app-date-picker formControlName="checkInDate" label="Nueva Entrada"></app-date-picker>
+                <app-date-picker formControlName="checkOutDate" label="Nueva Salida"></app-date-picker>
+            </div>
+
+            <div class="edit-actions">
+                <button type="button" class="btn-flat" (click)="onCancelEdit()">Descartar</button>
+                <button type="submit" class="btn-primary" [disabled]="editForm.invalid">Actualizar Reserva</button>
+            </div>
+        </form>
+        }
+    </div>
+</div>

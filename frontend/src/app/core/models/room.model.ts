@@ -1,3 +1,5 @@
+import { Hotel } from './hotel.model';
+
 export interface Room {
   readonly id: number;
   readonly name: string;
@@ -6,4 +8,5 @@ export interface Room {
   readonly capacity: number;
   readonly available: boolean;
   readonly pricePerNight: number;
+  hotel: Hotel;
 }

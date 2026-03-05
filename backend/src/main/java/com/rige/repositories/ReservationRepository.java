@@ -1,6 +1,10 @@
 package com.rige.repositories;
 
 import com.rige.entities.ReservationEntity;
+import org.jspecify.annotations.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -16,8 +20,12 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long>,
         JpaSpecificationExecutor<ReservationEntity> {
 
-    @EntityGraph(attributePaths = {"user", "room"})
-    List<ReservationEntity> findByUserId(Long userId);
+
+    @NonNull
+    @Override
+    @EntityGraph(attributePaths = {"user", "room", "room.hotel", "room.hotel.amenities"})
+    Page<ReservationEntity> findAll(@NonNull Specification<ReservationEntity> spec,
+                                    @NonNull Pageable pageable);
 
     @Query("""
     SELECT r FROM ReservationEntity r

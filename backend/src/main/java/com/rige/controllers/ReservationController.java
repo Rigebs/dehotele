@@ -3,13 +3,19 @@ package com.rige.controllers;
 import com.rige.dto.request.ReservationRequest;
 import com.rige.dto.request.UpdateReservationRequest;
 import com.rige.dto.response.ReservationResponse;
+import com.rige.filters.ReservationFilter;
+import com.rige.security.CustomUserDetails;
 import com.rige.services.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -38,11 +44,13 @@ public class ReservationController {
                 .body(reservationService.create(dto));
     }
 
-    @GetMapping("/user/{userId}")
-    public List<ReservationResponse> getByUser(
-            @PathVariable Long userId) {
+    @GetMapping("/my")
+    public Page<ReservationResponse> getMyReservations(
+            @ParameterObject ReservationFilter filter,
+            @AuthenticationPrincipal CustomUserDetails user,
+            Pageable pageable) {
 
-        return reservationService.findByUser(userId);
+        return reservationService.findByUser(user.id(), filter, pageable);
     }
 
     @GetMapping("/check-availability")

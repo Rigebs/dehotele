@@ -8,13 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public interface ReservationService {
 
     ReservationResponse create(ReservationRequest dto);
 
-    List<ReservationResponse> findByUser(Long userId);
+    Page<ReservationResponse> findByUser(Long userId, ReservationFilter filter, Pageable pageable);
 
     boolean isAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
 
