@@ -6,34 +6,34 @@
   display: block;
   margin-bottom: 0.4rem;
   font-size: 0.9rem;
-  color: var(--text-light);
+  color: #6b7280;
 }
 
 .select-box {
-  background: var(--bg-color, #fff);
+  background: #fff;
   border: 1px solid #d1d5db;
-  border-radius: var(--radius-sm, 8px);
+  border-radius: 8px;
   padding: 0.6rem 0.75rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: var(--transition, all 0.2s);
-  gap: 1rem;
+  transition: all 0.2s;
   min-height: 45px;
+  box-sizing: border-box;
 }
 
 .select-box:hover {
-  border-color: var(--primary-color, #1e3a8a);
+  border-color: #1e3a8a;
 }
 
 .selected-text {
   font-size: 0.95rem;
-  color: var(--text-color, #111827);
+  color: #111827;
 }
 
 .arrow {
-  color: var(--primary-color, #1e3a8a);
+  color: #1e3a8a;
   transition: transform 0.3s ease;
 }
 
@@ -45,15 +45,15 @@
   position: fixed;
   inset: unset;
   border: none;
-  margin: 0;
-  background: var(--bg-color, #fff);
-  border-radius: var(--radius-md, 12px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   z-index: 9999;
   display: none;
   max-height: 250px;
   overflow-y: auto;
+  width: auto;
+  padding: 0;
 }
 
 .dropdown:popover-open {
@@ -61,43 +61,28 @@
   animation: fadeIn 0.2s ease-out;
 }
 
-.dropdown[style*='bottom']:popover-open {
-  animation: fadeInAbove 0.2s ease-out;
-}
-
 .option {
-  padding: 0.6rem 0.75rem;
+  padding: 10px 12px;
   cursor: pointer;
-  transition: var(--transition, all 0.2s);
-  font-size: 0.9rem;
-  color: var(--text-color, #111827);
+  transition: all 0.2s;
+  font-size: 0.95rem; /* Corregido para ser idéntico al searchable */
+  color: #111827;
 }
 
 .option:hover {
-  background: rgba(30, 58, 138, 0.08);
+  background: #f3f4f6;
 }
 
 .option.active {
-  background: rgba(245, 158, 11, 0.15);
-  color: var(--primary-color, #1e3a8a);
-  font-weight: 500;
+  background: rgba(30, 58, 138, 0.08);
+  color: #1e3a8a;
+  font-weight: 600;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInAbove {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
   }
   to {
     opacity: 1;

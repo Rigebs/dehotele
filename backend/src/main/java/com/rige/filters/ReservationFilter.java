@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class ReservationFilter {
     private Long userId;
     private Long roomId;
+    private Long hotelId;
     private ReservationStatus status;
     private LocalDate startDate;
     private LocalDate endDate;

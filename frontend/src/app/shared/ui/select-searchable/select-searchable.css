@@ -1,0 +1,144 @@
+:host {
+  --primary-color: #1e3a8a;
+  --border-color: #d1d5db;
+  --bg-white: #ffffff;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+  display: block;
+  width: 100%;
+}
+
+.select-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.select-box {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  min-height: 45px;
+  box-sizing: border-box;
+}
+
+.select-box:hover {
+  border-color: var(--primary-color);
+}
+
+.selected-text {
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.dropdown {
+  position: fixed;
+  inset: unset;
+  border: none;
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  z-index: 9999;
+  padding: 0;
+  overflow: hidden;
+  width: auto;
+}
+
+.dropdown:popover-open {
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.search-wrapper {
+  padding: 8px;
+  border-bottom: 1px solid #f3f4f6;
+  background: var(--bg-white);
+  position: sticky;
+  top: 0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--primary-color);
+}
+
+.options-list {
+  max-height: 250px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.option {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  transition: background 0.2s;
+}
+
+.option:hover {
+  background: #f3f4f6;
+}
+
+.option.active {
+  background: color-mix(in srgb, var(--primary-color), transparent 92%);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.no-results,
+.load-more-zone {
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

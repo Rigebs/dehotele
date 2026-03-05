@@ -14,6 +14,10 @@ public class ReservationSpecification {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            if (filter.getHotelId() != null) {
+                predicates.add(cb.equal(root.get("room").get("hotel").get("id"), filter.getHotelId()));
+            }
+
             if (filter.getUserId() != null) {
                 predicates.add(cb.equal(root.get("user").get("id"), filter.getUserId()));
             }

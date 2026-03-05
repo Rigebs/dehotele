@@ -1,0 +1,350 @@
+/* ==========================================================================
+   VARIABLES Y BASE (Asegúrate de tener estas variables en tu styles.css)
+   ========================================================================== */
+:host {
+  --primary-color: #1e3a8a;
+  --text-color: #1f2937;
+  --text-light: #6b7280;
+  --bg-color: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.05);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --transition: all 0.2s ease;
+}
+
+/* ==========================================================================
+   TOOLBAR PRINCIPAL
+   ========================================================================== */
+.toolbar {
+  display: flex;
+  gap: 1rem;
+  background: var(--bg-color);
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+  align-items: center;
+  box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+/* Caja de Búsqueda */
+.search-box {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  height: 42px;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-sm);
+  background-color: #f9fafb;
+  transition: var(--transition);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+/* ==========================================================================
+   BOTONES (Globales y Filtro)
+   ========================================================================== */
+.btn-primary,
+.btn-secondary,
+.btn-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  height: 42px; /* Consistencia con el input */
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.btn-secondary {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: var(--text-color);
+}
+
+.btn-secondary:hover {
+  background: #f9fafb;
+}
+
+.btn-filter {
+  background: white;
+  border: 1px solid #d1d5db;
+  position: relative;
+  color: var(--text-color);
+}
+
+.btn-filter:hover {
+  background: #f9fafb;
+}
+
+.btn-filter.active {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: #eff6ff;
+}
+
+/* Badge de notificación en botón filtro */
+.filter-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+/* ==========================================================================
+   BARRA DE FILTROS ACTIVOS (CHIPS)
+   ========================================================================== */
+.active-filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background-color: #f8fafc;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+  animation: slideDown 0.3s ease;
+}
+
+.active-filters-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.chips-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 2px 2px 2px 10px;
+  font-size: 0.85rem;
+}
+
+.chip-key {
+  color: var(--text-light);
+}
+
+.chip-value {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.chip-remove {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--text-light);
+  display: flex;
+  transition: var(--transition);
+}
+
+.chip-remove:hover {
+  color: #ef4444;
+  background: #fff1f2;
+  border-radius: 6px;
+}
+
+.btn-clear-all {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-clear-all:hover {
+  background: #fff1f2;
+}
+
+/* ==========================================================================
+   DIÁLOGO / MODAL DE FILTROS
+   ========================================================================== */
+.filter-modal {
+  border: none;
+  border-radius: var(--radius-md);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  overflow: hidden;
+}
+
+.filter-modal::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h2 {
+  font-size: 1.1rem;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.close-modal {
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  display: flex;
+  padding: 5px;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.close-modal:hover {
+  background: #f1f5f9;
+  color: var(--text-color);
+}
+
+.modal-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.modal-footer {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ==========================================================================
+   ANIMACIONES Y RESPONSIVE
+   ========================================================================== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .filter-row {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-modal {
+    width: 95%;
+    top: auto;
+    bottom: 20px;
+    transform: translateX(-50%);
+    animation: slideUp 0.3s ease;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translate(-50%, 100%);
+  }
+  to {
+    transform: translate(-50%, 0);
+  }
+}

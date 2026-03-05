@@ -11,19 +11,20 @@ import {
 } from '@angular/core';
 import { ReservationResponse } from '../../../../../core/models/reservation.model';
 import { AdminReservationService } from '../../../services/admin-reservation-service';
-import { Select, SelectOption } from '../../../../../shared/ui/select/select';
+import { SelectOption } from '../../../../../shared/ui/select/select';
 import { FormsModule } from '@angular/forms';
 import { AdminReservationsTable } from '../../components/admin-reservations-table/admin-reservations-table';
-import { DatePicker } from '../../../../../shared/ui/date-picker/date-picker';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { HotelService } from '../../../../hotels/services/hotel-service';
-import { DatePipe } from '@angular/common';
+import { HotelFilter, HotelService } from '../../../../hotels/services/hotel-service';
+import {
+  AdminReservationsFilters,
+  ReservationFilters,
+} from '../../components/admin-reservations-filters/admin-reservations-filters';
 
 @Component({
   selector: 'app-admin-reservations-page',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Select, FormsModule, AdminReservationsTable, DatePicker, DatePipe],
+  imports: [FormsModule, AdminReservationsTable, AdminReservationsFilters],
   templateUrl: './admin-reservations-page.html',
   styleUrl: './admin-reservations-page.css',
 })
@@ -39,6 +40,19 @@ export class AdminReservationsPage implements OnInit, OnDestroy {
   reservations = signal<ReservationResponse[]>([]);
   isLoading = signal(false);
   hotels = signal<SelectOption[]>([]);
+
+  loadingHotels = signal(false);
+  hasMoreHotels = signal(false);
+  private hotelPage = 0;
+  private currentHotelQuery = '';
+
+  currentFilters = signal<ReservationFilters>({
+    searchTerm: '',
+    status: 'ALL',
+    hotelId: 'ALL',
+    startDate: null,
+    endDate: null,
+  });
 
   // Paginación
   currentPage = signal(0);
@@ -81,14 +95,58 @@ export class AdminReservationsPage implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
-    this.loadHotels();
-
     this.searchSubject.pipe(debounceTime(400), distinctUntilChanged()).subscribe((value) => {
       this.searchTerm.set(value);
       this.onFilterChange();
     });
 
     this.loadReservations();
+    this.loadHotels();
+  }
+
+  loadHotels(query: string = '', append: boolean = false): void {
+    this.loadingHotels.set(true);
+    this.currentHotelQuery = query;
+
+    if (!append) {
+      this.hotelPage = 0;
+    }
+
+    const filter: HotelFilter = {
+      name: query.trim() || undefined,
+      active: true,
+    };
+
+    this.hotelService.getHotels(this.hotelPage, filter, 'name,asc', 10).subscribe({
+      next: (res) => {
+        const newOptions = res.content.map((h) => ({
+          label: h.name,
+          value: h.id.toString(),
+        }));
+
+        if (append) {
+          this.hotels.update((prev) => [...prev, ...newOptions]);
+        } else {
+          this.hotels.set([{ label: 'Todos los Hoteles', value: 'ALL' }, ...newOptions]);
+        }
+
+        this.hasMoreHotels.set(res.number < res.totalPages - 1);
+        this.loadingHotels.set(false);
+      },
+      error: (err) => {
+        console.error('Error cargando hoteles:', err);
+        this.loadingHotels.set(false);
+      },
+    });
+  }
+
+  handleHotelSearch(query: string): void {
+    this.loadHotels(query, false);
+  }
+
+  handleHotelLoadMore(): void {
+    this.hotelPage++;
+    this.loadHotels(this.currentHotelQuery, true);
   }
 
   ngOnDestroy(): void {
@@ -106,34 +164,26 @@ export class AdminReservationsPage implements OnInit, OnDestroy {
     }
   }
 
-  loadHotels(): void {
-    this.hotelService.getHotels(0, {}, 'name,asc', 100).subscribe({
-      next: (response) => {
-        const options = response.content.map((h) => ({
-          label: h.name,
-          value: h.id.toString(),
-        }));
-
-        this.hotels.set([{ label: 'Todos los hoteles', value: 'ALL' }, ...options]);
-      },
-      error: (err) => {
-        console.error('Error al cargar hoteles:', err);
-      },
-    });
+  handleFiltersChange(filters: ReservationFilters): void {
+    this.currentFilters.set(filters);
+    this.currentPage.set(0);
+    this.loadReservations();
   }
 
   loadReservations(): void {
     this.isLoading.set(true);
+    const f = this.currentFilters();
 
-    const filters: any = {
-      ...(this.statusFilter() !== 'ALL' && { status: this.statusFilter() }),
-      ...(this.hotelFilter() !== 'ALL' && { hotelId: this.hotelFilter() }),
-      ...(this.searchTerm().trim() && { search: this.searchTerm().trim() }),
-      ...(this.startDate() && { startDate: this.startDate() }),
-      ...(this.endDate() && { endDate: this.endDate() }),
+    // Construir el objeto de parámetros para el servicio
+    const params: any = {
+      ...(f.status !== 'ALL' && { status: f.status }),
+      ...(f.hotelId !== 'ALL' && { hotelId: f.hotelId }),
+      ...(f.searchTerm.trim() && { search: f.searchTerm.trim() }),
+      ...(f.startDate && { startDate: f.startDate }),
+      ...(f.endDate && { endDate: f.endDate }),
     };
 
-    this.adminResService.getAll(this.currentPage(), 10, filters).subscribe({
+    this.adminResService.getAll(this.currentPage(), 10, params).subscribe({
       next: (res) => {
         this.reservations.set(res.content);
         this.totalPages.set(res.totalPages);

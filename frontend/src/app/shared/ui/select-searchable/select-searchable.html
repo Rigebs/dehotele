@@ -1,0 +1,41 @@
+<div class="select-container">
+  @if (label()) {
+  <label class="select-label">{{ label() }}</label>
+  }
+
+  <div #btn class="select-box" (click)="toggle(btn)">
+    <span class="selected-text" [class.has-value]="selectedValue() !== null">
+      {{ selectedOption()?.label || placeholder() }}
+    </span>
+    <svg class="arrow" [class.rotate]="isOpen()" width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </div>
+
+  <div [id]="popoverId" popover class="dropdown">
+    <div class="search-wrapper">
+      <input type="text" [formControl]="searchControl" class="search-input" placeholder="Escribe para buscar..."
+        (click)="$event.stopPropagation()">
+    </div>
+
+    <div class="options-list" #optionsList>
+      @for (option of options(); track option.value) {
+      <div class="option" [class.active]="selectedValue() === option.value" (click)="select(option)">
+        {{ option.label }}
+      </div>
+      }
+
+      @if (hasMore() || loading()) {
+      <div #loadMoreTrigger class="load-more-zone">
+        @if (loading()) {
+        <div class="spinner"></div>
+        }
+      </div>
+      }
+
+      @if (options().length === 0 && !loading()) {
+      <div class="no-results">No se encontraron opciones</div>
+      }
+    </div>
+  </div>
+</div>
