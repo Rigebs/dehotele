@@ -1,6 +1,7 @@
 package com.rige.services;
 
 import com.rige.dto.request.ReservationRequest;
+import com.rige.dto.request.UpdateReservationRequest;
 import com.rige.dto.response.ReservationResponse;
 import com.rige.filters.ReservationFilter;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,8 @@ public interface ReservationService {
     List<ReservationResponse> findByUser(Long userId);
 
     boolean isAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
+
+    ReservationResponse update(Long id, UpdateReservationRequest dto);
 
     void cancel(Long reservationId);
 

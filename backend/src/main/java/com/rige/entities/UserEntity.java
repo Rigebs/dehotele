@@ -63,6 +63,9 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private boolean enabled;
 
+    @Column(length = 20)
+    private String phoneNumber;
+
     @Override
     @NullMarked
     public Collection<? extends GrantedAuthority> getAuthorities() {

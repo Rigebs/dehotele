@@ -16,6 +16,7 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long>,
         JpaSpecificationExecutor<ReservationEntity> {
 
+    @EntityGraph(attributePaths = {"user", "room"})
     List<ReservationEntity> findByUserId(Long userId);
 
     @Query("""
@@ -44,6 +45,20 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
 
     @EntityGraph(attributePaths = {"user", "room"})
     List<ReservationEntity> findTop5ByOrderByCreatedAtDesc();
+
+    @Query("""
+            SELECT r FROM ReservationEntity r\s
+            WHERE r.room.id = :roomId\s
+            AND r.id <> :excludeId\s
+            AND r.status <> 'CANCELLED'\s
+            AND (:checkIn < r.checkOutDate AND :checkOut > r.checkInDate)
+       \s""")
+    List<ReservationEntity> findConflictingReservationsExcludingId(
+            @Param("roomId") Long roomId,
+            @Param("checkIn") LocalDate checkIn,
+            @Param("checkOut") LocalDate checkOut,
+            @Param("excludeId") Long excludeId
+    );
 
     // 4. Reservas Activas Hoy
     // Corregido: Filtramos por CREATED (o el estado que consideres válido para ocupar la habitación)

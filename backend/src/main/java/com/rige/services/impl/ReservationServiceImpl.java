@@ -1,6 +1,7 @@
 package com.rige.services.impl;
 
 import com.rige.dto.request.ReservationRequest;
+import com.rige.dto.request.UpdateReservationRequest;
 import com.rige.dto.response.ReservationResponse;
 import com.rige.entities.ReservationEntity;
 import com.rige.entities.RoomEntity;
@@ -117,6 +118,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void cancel(Long reservationId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -147,6 +149,63 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setStatus(ReservationStatus.CANCELLED);
     }
 
+    // ReservationServiceImpl.java
+
+    @Override
+    @Transactional
+    public ReservationResponse update(Long id, UpdateReservationRequest dto) {
+        // 1. Validaciones básicas de lógica de fechas
+        if (dto.getCheckOutDate().isBefore(dto.getCheckInDate())
+                || dto.getCheckOutDate().isEqual(dto.getCheckInDate())) {
+            throw new BadRequestException("La fecha de salida debe ser posterior a la de entrada");
+        }
+
+        // 2. Buscar la reserva existente
+        ReservationEntity reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada"));
+
+        // 3. Verificar que el usuario sea el dueño de la reserva
+        UserEntity currentUser = getCurrentUser(); // Método auxiliar para obtener el principal
+        if (!reservation.getUser().getId().equals(currentUser.getId())) {
+            throw new BadRequestException("No tienes permiso para modificar esta reserva");
+        }
+
+        // 4. Verificar disponibilidad (IMPORTANTE: ignorar la reserva actual)
+        List<ReservationEntity> conflicts = reservationRepository
+                .findConflictingReservationsExcludingId(
+                        reservation.getRoom().getId(),
+                        dto.getCheckInDate(),
+                        dto.getCheckOutDate(),
+                        id
+                );
+
+        if (!conflicts.isEmpty()) {
+            throw new BadRequestException("La habitación no está disponible para las nuevas fechas seleccionadas");
+        }
+
+        // 5. Recalcular el precio total
+        long days = ChronoUnit.DAYS.between(dto.getCheckInDate(), dto.getCheckOutDate());
+        BigDecimal newTotalPrice = reservation.getRoom().getPricePerNight()
+                .multiply(BigDecimal.valueOf(days));
+
+        // 6. Actualizar campos
+        reservation.setCheckInDate(dto.getCheckInDate());
+        reservation.setCheckOutDate(dto.getCheckOutDate());
+        reservation.setTotalPrice(newTotalPrice);
+
+        // Opcional: Notificar por email el cambio
+        // emailService.sendReservationUpdate(reservation);
+
+        return reservationMapper.toResponseDTO(reservationRepository.save(reservation));
+    }
+
+    private UserEntity getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof UserEntity user)) {
+            throw new BadRequestException("Usuario no autenticado");
+        }
+        return user;
+    }
 
     @Override
     @Transactional(readOnly = true)

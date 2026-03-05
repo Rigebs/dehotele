@@ -3,6 +3,11 @@ import { ReservationRequest, ReservationResponse } from '../../../core/models/re
 import { environment } from '../../../../environments/environment.development';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
+export interface UpdateReservationRequest {
+  checkInDate: string;
+  checkOutDate: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -25,6 +30,10 @@ export class ReservationService {
 
   getReservationsByUserId(userId: number) {
     return this.http.get<ReservationResponse[]>(`${this.apiUrl}/user/${userId}`);
+  }
+
+  updateReservation(id: number, request: UpdateReservationRequest) {
+    return this.http.put<ReservationResponse>(`${this.apiUrl}/${id}`, request);
   }
 
   cancelReservation(id: number) {

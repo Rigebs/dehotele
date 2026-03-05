@@ -12,5 +12,7 @@ public record UserUpdateRequest(
         @NotBlank(message = "Email is required")
         @Email(message = "Invalid email format")
         @Size(max = 150, message = "Email cannot exceed 150 characters")
-        String email
+        String email,
+
+        String phoneNumber
 ) {}
