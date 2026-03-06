@@ -1,14 +1,13 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../core/services/auth-service';
-import { Router } from '@angular/router';
-import { Card } from '../../../../shared/ui/card/card';
+import { Router, RouterLink } from '@angular/router';
 import { Input } from '../../../../shared/ui/input/input';
 import { Button } from '../../../../shared/ui/button/button';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, Input, Button],
+  imports: [ReactiveFormsModule, Input, Button, RouterLink],
   templateUrl: './register-page.html',
   styleUrl: './register-page.css',
 })
@@ -30,9 +29,7 @@ export class RegisterPage {
   });
 
   submit(): void {
-    if (this.form.invalid) {
-      return;
-    }
+    if (this.form.invalid) return;
 
     this._isLoading.set(true);
     this._errorMessage.set(null);
@@ -41,7 +38,6 @@ export class RegisterPage {
       next: () => {
         this._isLoading.set(false);
         this.router.navigateByUrl('/');
-        console.log('skdfjs');
       },
       error: () => {
         this._isLoading.set(false);

@@ -13,6 +13,8 @@ import com.rige.filters.ReservationFilter;
 import com.rige.mappers.ReservationMapper;
 import com.rige.repositories.ReservationRepository;
 import com.rige.repositories.RoomRepository;
+import com.rige.repositories.UserRepository;
+import com.rige.security.CustomUserDetails;
 import com.rige.services.EmailService;
 import com.rige.services.ReservationService;
 import com.rige.specifications.ReservationSpecification;
@@ -37,6 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
     private final ReservationMapper reservationMapper;
     private final EmailService emailService;
 
@@ -55,17 +58,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("Room is not available");
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new BadRequestException("User not authenticated");
-        }
-
-        Object principal = authentication.getPrincipal();
-
-        if (!(principal instanceof UserEntity user)) {
-            throw new BadRequestException("Invalid authentication principal");
-        }
+        UserEntity user = getCurrentUser();
 
         List<ReservationEntity> conflicts = reservationRepository
                 .findConflictingReservations(
@@ -105,16 +98,15 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationResponse findById(Long id) {
 
-        var res = reservationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+        ReservationEntity res = reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
 
         return reservationMapper.toResponseDTO(res);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ReservationResponse> findByUser(Long userId, ReservationFilter
-            filter, Pageable pageable) {
+    public Page<ReservationResponse> findByUser(Long userId, ReservationFilter filter, Pageable pageable) {
 
         filter.setUserId(userId);
 
@@ -126,24 +118,16 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional(readOnly = true)
     public boolean isAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
-        return reservationRepository.findConflictingReservations(roomId, checkIn, checkOut).isEmpty();
+        return reservationRepository
+                .findConflictingReservations(roomId, checkIn, checkOut)
+                .isEmpty();
     }
 
     @Override
     @Transactional
     public void cancel(Long reservationId) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new BadRequestException("User not authenticated");
-        }
-
-        Object principal = authentication.getPrincipal();
-
-        if (!(principal instanceof UserEntity user)) {
-            throw new BadRequestException("User not authenticated");
-        }
+        UserEntity user = getCurrentUser();
 
         ReservationEntity reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
@@ -164,6 +148,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void complete(Long id) {
+
         ReservationEntity reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada"));
 
@@ -183,23 +168,21 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public ReservationResponse update(Long id, UpdateReservationRequest dto) {
-        // 1. Validaciones básicas de lógica de fechas
+
         if (dto.getCheckOutDate().isBefore(dto.getCheckInDate())
                 || dto.getCheckOutDate().isEqual(dto.getCheckInDate())) {
             throw new BadRequestException("La fecha de salida debe ser posterior a la de entrada");
         }
 
-        // 2. Buscar la reserva existente
         ReservationEntity reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada"));
 
-        // 3. Verificar que el usuario sea el dueño de la reserva
-        UserEntity currentUser = getCurrentUser(); // Método auxiliar para obtener el principal
+        UserEntity currentUser = getCurrentUser();
+
         if (!reservation.getUser().getId().equals(currentUser.getId())) {
             throw new BadRequestException("No tienes permiso para modificar esta reserva");
         }
 
-        // 4. Verificar disponibilidad (IMPORTANTE: ignorar la reserva actual)
         List<ReservationEntity> conflicts = reservationRepository
                 .findConflictingReservationsExcludingId(
                         reservation.getRoom().getId(),
@@ -212,28 +195,29 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("La habitación no está disponible para las nuevas fechas seleccionadas");
         }
 
-        // 5. Recalcular el precio total
         long days = ChronoUnit.DAYS.between(dto.getCheckInDate(), dto.getCheckOutDate());
-        BigDecimal newTotalPrice = reservation.getRoom().getPricePerNight()
+
+        BigDecimal newTotalPrice = reservation.getRoom()
+                .getPricePerNight()
                 .multiply(BigDecimal.valueOf(days));
 
-        // 6. Actualizar campos
         reservation.setCheckInDate(dto.getCheckInDate());
         reservation.setCheckOutDate(dto.getCheckOutDate());
         reservation.setTotalPrice(newTotalPrice);
-
-        // Opcional: Notificar por email el cambio
-        // emailService.sendReservationUpdate(reservation);
 
         return reservationMapper.toResponseDTO(reservationRepository.save(reservation));
     }
 
     private UserEntity getCurrentUser() {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UserEntity user)) {
+
+        if (auth == null || !(auth.getPrincipal() instanceof CustomUserDetails userDetails)) {
             throw new BadRequestException("Usuario no autenticado");
         }
-        return user;
+
+        return userRepository.findById(userDetails.id())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
     }
 
     @Override

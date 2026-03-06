@@ -21,6 +21,7 @@
   transition: all 0.2s;
   min-height: 45px;
   box-sizing: border-box;
+  gap: 1rem;
 }
 
 .select-box:hover {

@@ -97,5 +97,10 @@ public class HotelEntity extends BaseEntity {
         double rawRating = totalPoints / this.reviewsCount;
 
         this.rating = Math.round(rawRating * 10.0) / 10.0;
+
+        /*
+        * 4.33333333333
+        * 5.2222222222
+        * */
     }
 }
