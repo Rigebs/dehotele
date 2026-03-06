@@ -27,4 +27,12 @@ export class AdminReservationService {
 
     return this.http.get<PaginatedResponse<ReservationResponse>>(this.apiUrl, { params });
   }
+
+  getById(id: number): Observable<ReservationResponse> {
+    return this.http.get<ReservationResponse>(`${this.apiUrl}/${id}`);
+  }
+
+  complete(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/${id}/complete`, {});
+  }
 }

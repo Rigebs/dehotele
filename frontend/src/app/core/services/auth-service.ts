@@ -100,6 +100,7 @@ export class AuthService {
       fullName: payload.fullName,
       email: payload.sub,
       role: normalizedRole,
+      phoneNumber: '',
     });
   }
 

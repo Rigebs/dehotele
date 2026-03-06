@@ -20,6 +20,7 @@ import {
   AdminReservationsFilters,
   ReservationFilters,
 } from '../../components/admin-reservations-filters/admin-reservations-filters';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-reservations-page',
@@ -31,6 +32,7 @@ import {
 export class AdminReservationsPage implements OnInit, OnDestroy {
   private readonly adminResService = inject(AdminReservationService);
   private readonly hotelService = inject(HotelService);
+  private readonly router = inject(Router);
 
   menuAbierto = false;
 
@@ -222,8 +224,8 @@ export class AdminReservationsPage implements OnInit, OnDestroy {
     this.loadReservations();
   }
 
-  exportData(): void {
-    console.log('Exportando datos filtrados...');
+  handleViewDetail(reservation: ReservationResponse) {
+    this.router.navigateByUrl(`/admin/reservations/${reservation.id}`);
   }
 
   openFilters() {

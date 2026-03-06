@@ -13,9 +13,13 @@ public interface ReservationService {
 
     ReservationResponse create(ReservationRequest dto);
 
+    ReservationResponse findById(Long id);
+
     Page<ReservationResponse> findByUser(Long userId, ReservationFilter filter, Pageable pageable);
 
     boolean isAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
+
+    void complete(Long id);
 
     ReservationResponse update(Long id, UpdateReservationRequest dto);
 

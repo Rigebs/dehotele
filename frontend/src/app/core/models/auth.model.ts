@@ -18,5 +18,6 @@ export interface User {
   readonly id: number;
   readonly fullName: string;
   readonly email: string;
+  readonly phoneNumber: string;
   readonly role: 'USER' | 'ADMIN';
 }

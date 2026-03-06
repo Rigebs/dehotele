@@ -8,4 +8,11 @@ export const ADMIN_RESERVATIONS_ROUTES: Routes = [
         (m) => m.AdminReservationsPage,
       ),
   },
+  {
+    path: ':id',
+    loadComponent: () =>
+      import('./pages/admin-reservation-detail/admin-reservation-detail').then(
+        (m) => m.AdminReservationDetail,
+      ),
+  },
 ];

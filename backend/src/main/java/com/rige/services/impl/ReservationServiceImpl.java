@@ -103,6 +103,15 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public ReservationResponse findById(Long id) {
+
+        var res = reservationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+
+        return reservationMapper.toResponseDTO(res);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Page<ReservationResponse> findByUser(Long userId, ReservationFilter
             filter, Pageable pageable) {
@@ -152,7 +161,24 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setStatus(ReservationStatus.CANCELLED);
     }
 
-    // ReservationServiceImpl.java
+    @Override
+    @Transactional
+    public void complete(Long id) {
+        ReservationEntity reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada"));
+
+        if (reservation.getStatus() == ReservationStatus.COMPLETED) {
+            throw new BadRequestException("La reserva ya ha sido completada anteriormente");
+        }
+
+        if (reservation.getStatus() == ReservationStatus.CANCELLED) {
+            throw new BadRequestException("No se puede completar una reserva que ha sido cancelada");
+        }
+
+        reservation.setStatus(ReservationStatus.COMPLETED);
+
+        reservationRepository.save(reservation);
+    }
 
     @Override
     @Transactional
